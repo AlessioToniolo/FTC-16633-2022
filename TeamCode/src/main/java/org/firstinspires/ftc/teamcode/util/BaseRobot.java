@@ -93,8 +93,6 @@ public class BaseRobot {
         rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    // TODO: Forward Function (w/ PIDF for forward and heading)
-
     public void turn(double deg, double timeoutS) {
         // p stands for proportional
         double p;
