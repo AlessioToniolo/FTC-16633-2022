@@ -1,10 +1,10 @@
-# FTC 16633 Code For The 2020 2021 Season
+# FTC 16633 Code For The 2021-2022 Season
 
-FTC code project for 2020-2021 Ultimate Goal code for our state (and maybe even worlds) robot.
+FTC code project for 2021-2022 FF code for our state (and maybe even worlds) robot.
 
 ## Installation
 
-For more detailed instructions on getting FTC UG setup in your own project, see the [owner](https://github.com/AlessioToniolo) of this repo.
+For more detailed instructions on getting FTC FF setup in your own project, see the [owner](https://github.com/AlessioToniolo) of this repo.
 
 1. Download or clone this repo.
 
