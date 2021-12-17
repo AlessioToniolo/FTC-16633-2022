@@ -1,7 +1,6 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.util.BaseRobot;
 import org.firstinspires.ftc.teamcode.util.Printer;
@@ -25,5 +24,18 @@ public class AutoBlueLeft extends LinearOpMode {
 
         // Wait for User to Start
         waitForStart();
+
+
     }
+
+    // Functions for the different zones
+    private void zone1() {
+    }
+
+    private void zone2() {
+    }
+
+    private void zone3() {
+    }
+
 }
