@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.util;
+package org.firstinspires.ftc.teamcode.util.helpers;
 
 import java.util.ArrayList;
 
@@ -19,20 +19,6 @@ public class Printer {
         telemetry.addLine(message);
         telemetry.update();
     }
-
-
-
-
-    if (true) {
-
-    } else {
-
-    }
-
-
-
-
-
 
     // To print multiple lines
     public void printLines(ArrayList<String> str) {

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode.control;
+package org.firstinspires.ftc.teamcode.opmode.sample;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -13,12 +13,13 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
-import org.firstinspires.ftc.teamcode.util.TuningController;
+import org.firstinspires.ftc.teamcode.util.tuners.SingleMotorTuningController;
 
 @Config
 @TeleOp
+// TODO: delete disabled if using
 @Disabled
-public class SampleVelocityTuner extends LinearOpMode {
+public class SingleMotorVelocityTuner extends LinearOpMode {
     public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0, 0);
 
     private final FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -28,8 +29,8 @@ public class SampleVelocityTuner extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         // Change my id
-        // TODO: set motor to tune
-        DcMotorEx myMotor;
+        // TODO: set motor that will be tuned tune
+        DcMotorEx myMotor = null;
 
         // Reverse as appropriate
         // myMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -47,7 +48,7 @@ public class SampleVelocityTuner extends LinearOpMode {
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
         setPIDFCoefficients(myMotor, MOTOR_VELO_PID);
 
-        TuningController tuningController = new TuningController();
+        SingleMotorTuningController tuningController = new SingleMotorTuningController();
 
         double lastKp = 0.0;
         double lastKi = 0.0;
@@ -78,7 +79,7 @@ public class SampleVelocityTuner extends LinearOpMode {
             telemetry.addData("velocity", motorVelo);
             telemetry.addData("error", targetVelo - motorVelo);
 
-            telemetry.addData("upperBound", TuningController.rpmToTicksPerSecond(TuningController.TESTING_MAX_SPEED * 1.15));
+            telemetry.addData("upperBound", SingleMotorTuningController.rpmToTicksPerSecond(SingleMotorTuningController.TESTING_MAX_SPEED * 1.15));
             telemetry.addData("lowerBound", 0);
 
             if (lastKp != MOTOR_VELO_PID.p || lastKi != MOTOR_VELO_PID.i || lastKd != MOTOR_VELO_PID.d || lastKf != MOTOR_VELO_PID.f) {
@@ -103,6 +104,6 @@ public class SampleVelocityTuner extends LinearOpMode {
 
     public static double getMotorVelocityF() {
         // see https://docs.google.com/document/d/1tyWrXDfMidwYyP_5H4mZyVgaEswhOC35gvdmP-V-5hA/edit#heading=h.61g9ixenznbx
-        return 32767 * 60.0 / (TuningController.MOTOR_MAX_RPM * TuningController.MOTOR_TICKS_PER_REV);
+        return 32767 * 60.0 / (SingleMotorTuningController.MOTOR_MAX_RPM * SingleMotorTuningController.MOTOR_TICKS_PER_REV);
     }
 }

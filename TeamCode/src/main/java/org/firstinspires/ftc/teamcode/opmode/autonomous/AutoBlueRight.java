@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.util.BaseRobot;
 import org.firstinspires.ftc.teamcode.util.helpers.Printer;
 
 @Autonomous
-public class AutoBlueLeft extends LinearOpMode {
+public class AutoBlueRight extends LinearOpMode {
     // Instance of Robot Class
     BaseRobot robot = new BaseRobot();
 
