@@ -14,7 +14,7 @@ jobs:
       with:
         java-version: 1.8
     - name: Chmod Permissions #Gives gradle permissions
-      run: chmod +x gradle
+      run: chmod +x gradlew
     - name: Clean with Gradle
       run:  ./gradlew :teamcode:clean
     - name: Build with Gradle
