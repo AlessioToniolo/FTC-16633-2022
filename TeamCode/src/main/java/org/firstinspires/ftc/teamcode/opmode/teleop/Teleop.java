@@ -1,6 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode.Teleop;
-import org.firstinspires.ftc.teamcode.util.BaseRobot;
-import org.firstinspires.ftc.teamcode.util.helpers.Printer;
+package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,8 +6,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import java.util.ArrayList;
+import org.firstinspires.ftc.teamcode.util.BaseRobot;
+import org.firstinspires.ftc.teamcode.util.fields.PositionFields;
+import org.firstinspires.ftc.teamcode.util.helpers.Printer;
 
+import java.util.ArrayList;
 
 //things I still want to make
 /*
@@ -18,14 +19,34 @@ import java.util.ArrayList;
 3- player2 right stick button control linear slider position maybe???
 4- more capstone arm automation, maybe one button for standing up and another for on the ground
 5- quality of life fixes- when bucket is put into holding position intake is stopped, intake bar moves if in holding and linear slider is pressed up and doesnt break :)
-
  */
 
-
 @TeleOp
-public class Dual_Control_TeleopTank_2021 extends OpMode {
+public class Teleop extends OpMode {
+    //final ints and doubles can be mainpulated in robot class
+    //slider positions
+    public final int rest = 0;
+    public final int low = PositionFields.LOW;
+    public final int middle = PositionFields.MIDDLE;
+    public final int top = PositionFields.TOP;
+    final int capstonemaxcounts = 2500;//max coutns during endgame- increases because capping requires the lienar slider to rise higher
+    //intake bar positions
+    final double over = PositionFields.BUCKET_OVER;//.475
+    final double notover = PositionFields.BUCKET_NOT_OVER;//.35
+    //bucket positions
+    final double bucketintake = PositionFields.BUCKET_INTAKE; //.08
+    final double holding = PositionFields.HOLDING; //.35
+    final double outtake = 1; //.9
+    //max carousel speed
+    final double maxcarouselspeed = PositionFields.MAX_CAROUSEL_SPEED; //.9
+    //servo positions for capstone arm
+    final double capstonerest = PositionFields.CAPSTONE_REST;//.9
+    final double capstoneintake = PositionFields.CAPSTONE_INTAKE;//unknown
+    final double capstonecapping = PositionFields.CAPSTONE_CAPPING;// .27 doublethink is what they want you to think (run or the party will find you)
     // Use the class created to define  Robot's hardware
     BaseRobot robot = new BaseRobot();
+    final double stop = PositionFields.STOP;//time for how long carousel should be stopped for
+    final double go = PositionFields.GO; // time for how long carousel should be stopped for
     //dual control variable
     Gamepad curgamepad = null;
     Gamepad curgamepad2 = null;
@@ -50,7 +71,6 @@ public class Dual_Control_TeleopTank_2021 extends OpMode {
      */
     int gamemode = 0;//0 if off 1 if driver control 2 if endgame 3 if 15 seconds left till endgame
     Printer printer = new Printer();
-
     //toggle variables for buttons the ones with 2 on the end are for the second gamepad
     boolean preValueA = false;
     boolean preValueB = false;
@@ -63,93 +83,51 @@ public class Dual_Control_TeleopTank_2021 extends OpMode {
     boolean preValueDLeft = false;//left
     boolean preValueDUp = false;
     boolean preValueDDown = false;
-
     boolean preValueRTrigger = false;
     boolean preValueLTrigger = false;
     boolean preValueRBumper = false;
     boolean preValueRBumper2 = false;
     boolean preValueLBumper = false;
     boolean preValueLBumper2 = false;
-
     boolean preValueBack = false;
     boolean preValueStart = false;
     boolean preValueGuide = false;
     boolean leftStickButton = false;
     boolean rightStickButton = false;
-
     //variables which track bucketStates of servos and motors
     double speed = 1; //tracks speed of motors
     double curspeed = 1;//tracks the durrent speed fo the motors and is used to remember the past speed when activating a speed boost
-
     double intake = 0; //if 0 intake is off, if 1 intake is on -1 is intake is in reverse
-
-
     boolean redcarouselActive = false;//track if red and blue carousel are on
     boolean bluecarouselActive = false;
-    final double stop = robot.stop;//time for how long carousel should be stopped for
-    final double go = robot.go; // time for how long carousel should be stopped for
     double goTime = 0;//updated variable for how long carousel shoudl be run for changes based on speed of carousel
+    int intakeBar = 0;//0 if not above 1 if above
+    double sliderPower = 0;// Variable for linear slider manual power
+    double servoPower = 0;//variable for detecting if triggers are pressed and how much they are pressed
+    int bucketState = 0; //bucketState of a toggle for bucket 0 if intake 1 if holding with bar 2 if holding without bar 3 if emptying
+    int capstonebucketState = 0; // 0 if at rest 1 if picking up and 2 if capping
+    // Variable of linear slider target position
+    int target = 0;//the position the slider is told to run to
+    double servotarget = 0;// the postion the capstone is set to in manual control
+    // Constant for max number of encoder counts for stages
+    int maxCounts = 2000;//maxcounts during Drier control
+    int sliderstate = 0; // 0 if at rest 1 if at low 2 if at middle 3 if at high 4 if at capstone- used for autonmatic slider control
+    //modifier which slows or speed up the carousel
+    double carouselmodifier = 0;
+    //dual control booleans
+    boolean practicemode = false; //if practice mode is true than the dual controls are kept but the timer is ignored
+    boolean dualcontrols = true; //if ture dueal controls are used else all necessary functionality is switched to player 1
     //timers for autonmatic carousel spinning
     private ElapsedTime redStop = null;
     private ElapsedTime redGo = null;
     private ElapsedTime blueStop = null;
     private ElapsedTime blueGo = null;
-    private ElapsedTime runtime  = null; //tracks elapsed time
-
-
-
-
-
-    int intakeBar = 0;//0 if not above 1 if above
-
-    double sliderPower = 0;// Variable for linear slider manual power
-    double servoPower = 0;//variable for detecting if triggers are pressed and how much they are pressed
-
-    int bucketState = 0; //bucketState of a toggle for bucket 0 if intake 1 if holding with bar 2 if holding without bar 3 if emptying
-    int capstonebucketState = 0; // 0 if at rest 1 if picking up and 2 if capping
-
-    // Variable of linear slider target position
-    int target = 0;//the position the slider is told to run to
-    double servotarget = 0;// the postion the capstone is set to in manual control
-
-    // Constant for max number of encoder counts for stages
-    int maxCounts = 2000;//maxcounts during Drier control
-    final int capstonemaxcounts = 2500;//max coutns during endgame- increases because capping requires the lienar slider to rise higher
-
-
-
-
-
-    //final ints and doubles can be mainpulated in robot class
-    //slider positions
-    public final int rest = 0;
-    public final int low = robot.low;
-    public final int middle = robot.middle;
-    public final int top = robot.top;
-    int sliderstate = 0; // 0 if at rest 1 if at low 2 if at middle 3 if at high 4 if at capstone- used for autonmatic slider control
-    //intake bar positions
-    final double over = robot.bucketover;//.475
-    final double notover = robot.bucketnotover;//.35
-    //bucket positions
-    final double bucketintake = robot.bucketintake; //.08
-    final double holding = robot.holding; //.35
-    final double outtake = 1; //.9
-    //max carousel speed
-    final double maxcarouselspeed = robot.maxcarouselspeed; //.9
-    //modifier which slows or speed up the carousel
-    double carouselmodifier = 0;
-    //servo positions for capstone arm
-    final double capstonerest = robot.capstonerest;//.9
-    final double capstoneintake = robot.capstoneintake;//unknown
-    final double capstonecapping = robot.capstonecapping;// .27 doublethink is what they want you to think (run or the party will find you)
-    //dual control booleans
-    boolean practicemode = false; //if practice mode is true than the dual controls are kept but the timer is ignored
-    boolean dualcontrols = true; //if ture dueal controls are used else all necessary functionality is switched to player 1
+    private ElapsedTime runtime = null; //tracks elapsed time
 
     @Override
     public void init() {
         // Init hardware variables
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, false);
         player1 = gamepad1;
         player2 = gamepad2;
         // Send telemetry message to signify robot waiting
@@ -184,10 +162,7 @@ public class Dual_Control_TeleopTank_2021 extends OpMode {
         // if the timer hasn't started then start it
         if (runtime == null) {
             runtime = new ElapsedTime();
-        }
-
-        else if (runtime.seconds() < 121 || practicemode)
-        {
+        } else if (runtime.seconds() < 121 || practicemode) {
             if (runtime.seconds() < 76 && runtime.seconds() > 75) {//if 15 seconds before endgame
                 robot.carousel.setPower(1);//spins the carousel when it is time to get the capstone
                 redcarouselActive = true;
@@ -199,9 +174,6 @@ public class Dual_Control_TeleopTank_2021 extends OpMode {
             else if (runtime.seconds() > 90) gamemode = 2; // game is in autonomous
 
             else if (runtime.seconds() < 90) gamemode = 1; // in drvier control
-
-
-
 
 
             if (gamemode == 1 && !practicemode) {
@@ -219,14 +191,12 @@ public class Dual_Control_TeleopTank_2021 extends OpMode {
             double total1;
             double total2;
 
-            if(!dualcontrols)//if we arent using dualcontrols then witch all necessary controls to player 1
+            if (!dualcontrols)//if we arent using dualcontrols then witch all necessary controls to player 1
             {
                 curgamepad = gamepad1;
                 curgamepad2 = gamepad2;
 
-            }
-            else
-            {
+            } else {
                 curgamepad = gamepad2;
                 curgamepad2 = gamepad1;
             }
@@ -234,13 +204,10 @@ public class Dual_Control_TeleopTank_2021 extends OpMode {
 
             // Toggle speed cap for motors
             if (player1.back && player1.back != preValueBack) {
-                if (speed == 1)
-                {
+                if (speed == 1) {
                     speed = 0.5;
                     curspeed = 0.5;
-                }
-                else if (speed != 1)
-                {
+                } else if (speed != 1) {
                     speed = 1;
                     curspeed = 1;
                 }
@@ -248,16 +215,12 @@ public class Dual_Control_TeleopTank_2021 extends OpMode {
             }
             preValueBack = player1.back;
 
-            if(player1.left_stick_button)
-            {
-                if(speed != 1)
-                {
+            if (player1.left_stick_button) {
+                if (speed != 1) {
                     curspeed = speed;
                 }
                 speed = 1;
-            }
-            else
-            {
+            } else {
                 speed = curspeed;
             }
             // Adjusting the input by the speed cap
@@ -275,20 +238,17 @@ public class Dual_Control_TeleopTank_2021 extends OpMode {
             robot.rightRear.setPower(total2);
 
             double gotime = (5.0 / 3.0) / (maxcarouselspeed + carouselmodifier);//this determines howlong the spinner must spin based on the carousel speed
-            if((maxcarouselspeed + carouselmodifier) == 1)
-            {
+            if ((maxcarouselspeed + carouselmodifier) == 1) {
                 gotime = 1.5;
             }
             // Toggle intake
-            if (player1.dpad_right && player1.dpad_right != preValueDRight)
-            {
+            if (player1.dpad_right && player1.dpad_right != preValueDRight) {
 
 
                 if (intake == 0 || intake == -1) {
                     intake = 1;
 
-                }
-                else {
+                } else {
                     intake = 0;
 
                 }
@@ -305,9 +265,8 @@ public class Dual_Control_TeleopTank_2021 extends OpMode {
                 robot.intake.setPower(intake);
             }
 
-            if(player2.dpad_up && player2.dpad_up != preValueDUp)
-            {
-                if(intakeBar == 0) {
+            if (player2.dpad_up && player2.dpad_up != preValueDUp) {
+                if (intakeBar == 0) {
                     if (sliderstate == 0 || sliderstate == 1 || sliderstate == 2) {
                         sliderstate = 3;
                         target = top;
@@ -323,27 +282,18 @@ public class Dual_Control_TeleopTank_2021 extends OpMode {
             }
             preValueDUp = player2.dpad_up;
 
-            if(player2.dpad_down && player2.dpad_down != preValueDDown)
-            {
-                if(intakeBar == 0)
-                {
-                    if(sliderstate == 4)
-                    {
+            if (player2.dpad_down && player2.dpad_down != preValueDDown) {
+                if (intakeBar == 0) {
+                    if (sliderstate == 4) {
                         sliderstate = 3;
                         target = top;
-                    }
-                    else if(sliderstate== 3)
-                    {
+                    } else if (sliderstate == 3) {
                         sliderstate = 2;
                         target = middle;
-                    }
-                    else if(sliderstate == 2)
-                    {
+                    } else if (sliderstate == 2) {
                         sliderstate = 1;
                         target = low;
-                    }
-                    else if(sliderstate == 1)
-                    {
+                    } else if (sliderstate == 1) {
                         sliderstate = 0;
                         target = 0;
                     }
@@ -433,8 +383,7 @@ public class Dual_Control_TeleopTank_2021 extends OpMode {
                 target += sliderPower * 10;//adds 10 to the target
                 if (target > maxCounts) {
                     target = maxCounts;//if the target is greater than the maxcounts than the target = max counts
-                }
-                else if (target < 0) {
+                } else if (target < 0) {
                     target = 0;
                 }
 
@@ -465,8 +414,7 @@ public class Dual_Control_TeleopTank_2021 extends OpMode {
 
                 if (bucketState == 0)//if in intake -  set  to holding positions and move bar to over
                 {
-                    if(robot.slider.getCurrentPosition() < 100)
-                    {
+                    if (robot.slider.getCurrentPosition() < 100) {
                         robot.intakeBar.setPosition(over);
                         intakeBar = 1;
                     }
@@ -542,12 +490,10 @@ public class Dual_Control_TeleopTank_2021 extends OpMode {
             }
             preValueRBumper = player1.right_bumper;
             if (player1.left_bumper && player1.left_bumper != preValueLBumper) {
-                if(speed <= .1)
-                {
+                if (speed <= .1) {
                     speed = .1;
                     curspeed = speed;
-                }
-                else{
+                } else {
                     speed = speed - .25;
                     curspeed = speed;
                 }
@@ -590,7 +536,6 @@ public class Dual_Control_TeleopTank_2021 extends OpMode {
             preValueY2 = player2.y;
 
 
-
             //currently changes gamepad in control
 
             // if teh center button is presed than matchmode is turned off if matchmode is off all essentail controls go to player1
@@ -603,28 +548,24 @@ public class Dual_Control_TeleopTank_2021 extends OpMode {
             }
             preValueGuide = player1.guide;
 
-            if(player1.start && player1.start != preValueStart)
-            {
-                if(practicemode)
-                {
+            if (player1.start && player1.start != preValueStart) {
+                if (practicemode) {
                     practicemode = false;
-                }
-                else if (!practicemode && runtime.seconds() > 2.0)
-                {
+                } else if (!practicemode && runtime.seconds() > 2.0) {
                     practicemode = true;
                 }
             }
             preValueStart = player1.start;
-            ArrayList<String> output = new ArrayList<>() ;
+            ArrayList<String> output = new ArrayList<>();
 
             if (practicemode) {
                 //OUTPUTTING bucketStateS OF VARIABLES
                 output.add("/////STATES/////");
                 output.add("Intake:" + intake);
                 output.add("bucket:" + bucketState);
-                output.add("Maxcounts:  " +  maxCounts);
-                output.add("SliderState:" +  sliderstate);
-                output.add("Slider Position is " +  robot.slider.getCurrentPosition()  + " and target of the slider is" + target);
+                output.add("Maxcounts:  " + maxCounts);
+                output.add("SliderState:" + sliderstate);
+                output.add("Slider Position is " + robot.slider.getCurrentPosition() + " and target of the slider is" + target);
                 output.add("Capstone:  " + servotarget);
                 //OUTPUTTING SPEED OF MOTORS
                 output.add("/////SPEEDS/////");
@@ -635,25 +576,22 @@ public class Dual_Control_TeleopTank_2021 extends OpMode {
                 output.add("//////OTHER DATA/////");
                 output.add("Time" + runtime.seconds());
                 String gameModeTitle;
-                if(gamemode == 1) gameModeTitle = "DRIVER CONTROL";
-                else if(gamemode == 2) gameModeTitle = "GET CAPSTONE TIME";
+                if (gamemode == 1) gameModeTitle = "DRIVER CONTROL";
+                else if (gamemode == 2) gameModeTitle = "GET CAPSTONE TIME";
                 else gameModeTitle = "ENDGAME";
-                output.add("Game Portion" +  gamemode + gameModeTitle);
-                output.add("PracticeMode:  " +  practicemode);
-                output.add("DualControlsActive:  " +  dualcontrols);
-            }
-            else {
-                output.add("Carousel speed = " +  maxcarouselspeed + carouselmodifier);
+                output.add("Game Portion" + gamemode + gameModeTitle);
+                output.add("PracticeMode:  " + practicemode);
+                output.add("DualControlsActive:  " + dualcontrols);
+            } else {
+                output.add("Carousel speed = " + maxcarouselspeed + carouselmodifier);
                 output.add("Time" + runtime.seconds());
-                output.add("Game Portion" +  gamemode);
+                output.add("Game Portion" + gamemode);
                 output.add("DualControls" + dualcontrols);
                 output.add("practicemode" + practicemode);
 
             }
             printer.printLines(output);
-        }
-        else if(runtime.seconds() > 121)
-        {
+        } else if (runtime.seconds() > 121) {
             robot.carousel.setPower(0);
             robot.intake.setPower(0);
         }

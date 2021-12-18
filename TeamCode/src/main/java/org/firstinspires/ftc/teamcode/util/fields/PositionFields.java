@@ -7,8 +7,8 @@ public class PositionFields {
     public static final int TOP = 2000;
 
     // Intake Bar Positions
-    public final double BUCKET_OVER = .35;
-    public final double BUCKET_NOT_OVER = .475;
+    public static final double BUCKET_OVER = .35;
+    public static final double BUCKET_NOT_OVER = .475;
 
     // Bucket Positions
     public static final double BUCKET_INTAKE = .08;
@@ -17,7 +17,7 @@ public class PositionFields {
 
     // Capstone Positions
     public static final double CAPSTONE_REST = .9;
-    public static final double CAPSTONE_INCHES = .24;
+    public static final double CAPSTONE_INTAKE = .24;
     public static final double CAPSTONE_CAPPING = .6;
 
     // Speed Values

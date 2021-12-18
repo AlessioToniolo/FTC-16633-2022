@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.util;
 
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -29,40 +28,6 @@ public class BaseRobot {
     public Servo intakeBar;
     public Servo capstoneArm;
 
-
-    //FINAL INTS nts for auto and teleop
-    //MotorEncoder positions
-    //Slider Positions
-    public final int low = 400;
-    public final int middle = 1050;
-    public final int top = 1800;
-    //Carousel Motor ints
-    //max carousel speed before starts to spin ducks off
-    public final double maxcarouselspeed =  1;
-    public final double stop = 1.5;
-    public final double go = 1.5;
-
-    //SERVO POSITIONS
-    //intake bar positions
-    public final double bucketover = .35;
-    public final double bucketnotover = .475;
-    //bucket positions
-    public final double bucketintake = .08;
-    public final double holding = .35;
-    public final double outtake = 1;
-    //capstone positions
-    public final double capstonerest = .9;
-    public final double capstoneintake = .24;
-    public final double capstonecapping = .6;
-
-    // For Encoder Functions
-    private double     COUNTS_PER_MOTOR_REV          = 537.6 ;    // eg: TETRIX Motor Encoder
-    private final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
-    private double     WHEEL_DIAMETER_INCHES         = 4 ;     // For figuring circumference
-    private double     COUNTS_PER_INCH               = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
-    private double COUNTS_PER_DEGREE                 = COUNTS_PER_MOTOR_REV / 360;
-    private double     DRIVE_SPEED                   = 1.0;
-    private double     TURN_SPEED                    = 1.0;
     // Local OpMode members
     HardwareMap hwMap;
 
@@ -78,7 +43,7 @@ public class BaseRobot {
     }
 
     // Initialize Standard Hardware Interfaces
-    public void init(HardwareMap ahwMap) {
+    public void init(HardwareMap ahwMap, boolean RUN_USING_ENCODERS) {
         // Save Reference to Hardware map
         hwMap = ahwMap;
 
@@ -115,11 +80,20 @@ public class BaseRobot {
         leftRear.setPower(0);
         rightRear.setPower(0);
 
-        // Set all motors to run without encoders
-        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        // Option for run without encoders (teleop) or rue (auto)
+        if (RUN_USING_ENCODERS) {
+            // Set all motors to run using encoder
+            leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        } else {
+            // Set all motors to run without encoders
+            leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
     }
 
     public void turn(double deg, double timeoutS) {

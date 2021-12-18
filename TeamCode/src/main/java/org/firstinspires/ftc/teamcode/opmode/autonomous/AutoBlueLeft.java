@@ -19,7 +19,7 @@ public class AutoBlueLeft extends LinearOpMode {
         printer.print("Wait for Start!");
 
         // Initialize Hardware
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, true);
 
         // Signal that robot is ready to run
         printer.print("Ready to start!");
