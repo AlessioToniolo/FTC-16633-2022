@@ -16,7 +16,9 @@ public class AutoBlueLeft extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        printer.print("Wait for Start!");
+        // TODO: testing error
+        //printer.print("Wait for Start!");
+        printer.prit("Wait for Start!");
 
         // Initialize Hardware
         robot.init(hardwareMap, true);
