@@ -12,10 +12,13 @@ public class AutoBlueRight extends LinearOpMode {
     BaseRobot robot = new BaseRobot();
 
     // Instance of a Printing Class for Telemetry
-    Printer printer = new Printer();
+    Printer printer;
 
     @Override
     public void runOpMode() throws InterruptedException {
+        // Initialize telemetry
+        printer = new Printer(telemetry);
+
         printer.print("Wait for Start!");
 
         // Initialize Hardware

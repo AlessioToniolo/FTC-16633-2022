@@ -70,7 +70,7 @@ public class Teleop extends OpMode {
 
      */
     int gamemode = 0;//0 if off 1 if driver control 2 if endgame 3 if 15 seconds left till endgame
-    Printer printer = new Printer();
+    Printer printer;
     //toggle variables for buttons the ones with 2 on the end are for the second gamepad
     boolean preValueA = false;
     boolean preValueB = false;
@@ -128,6 +128,11 @@ public class Teleop extends OpMode {
     public void init() {
         // Init hardware variables
         robot.init(hardwareMap, false);
+
+        // Init telemetry
+        printer = new Printer(telemetry);
+
+
         player1 = gamepad1;
         player2 = gamepad2;
         // Send telemetry message to signify robot waiting
@@ -590,7 +595,7 @@ public class Teleop extends OpMode {
                 output.add("practicemode" + practicemode);
 
             }
-            printer.printLines(output);
+            //printer.printLines(output);
         } else if (runtime.seconds() > 121) {
             robot.carousel.setPower(0);
             robot.intake.setPower(0);
