@@ -23,6 +23,5 @@ dependencies {
     implementation 'org.firstinspires.ftc:gameAssets-FreightFrenzy:1.0.0'
     // FTCDASH
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.3'
-    implementation 'com.github.NoahBres:jotai:1.0.3'
 }
 
