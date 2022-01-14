@@ -29,6 +29,7 @@ public class Teleop extends OpMode {
     public final int low = PositionFields.LOW;
     public final int middle = PositionFields.MIDDLE;
     public final int top = PositionFields.TOP;
+    public final int sliderCapstoneIntake = PositionFields.sliderCapstoneIntake;
     final int capstonemaxcounts = 2500;//max coutns during endgame- increases because capping requires the lienar slider to rise higher
     //intake bar positions
     final double over = PositionFields.BUCKET_OVER;//.475
@@ -36,7 +37,7 @@ public class Teleop extends OpMode {
     //bucket positions
     final double bucketintake = PositionFields.BUCKET_INTAKE; //.08
     final double holding = PositionFields.HOLDING; //.35
-    final double outtake = 1; //.9
+    final double outtake = PositionFields.OUTTAKE; //.9
     //max carousel speed
     final double maxcarouselspeed = PositionFields.MAX_CAROUSEL_SPEED; //.9
     //servo positions for capstone arm
@@ -70,9 +71,9 @@ public class Teleop extends OpMode {
 
      */
     int gamemode = 0;//0 if off 1 if driver control 2 if endgame 3 if 15 seconds left till endgame
-    Printer printer;
     //toggle variables for buttons the ones with 2 on the end are for the second gamepad
     boolean preValueA = false;
+    boolean preValueA2 = false;
     boolean preValueB = false;
     boolean preValueB2 = false;
     boolean preValueX = false;
@@ -105,7 +106,7 @@ public class Teleop extends OpMode {
     double sliderPower = 0;// Variable for linear slider manual power
     double servoPower = 0;//variable for detecting if triggers are pressed and how much they are pressed
     int bucketState = 0; //bucketState of a toggle for bucket 0 if intake 1 if holding with bar 2 if holding without bar 3 if emptying
-    int capstonebucketState = 0; // 0 if at rest 1 if picking up and 2 if capping
+    int capstoneState = 0; // 0 if at rest 1 if picking up and 2 if capping
     // Variable of linear slider target position
     int target = 0;//the position the slider is told to run to
     double servotarget = 0;// the postion the capstone is set to in manual control
@@ -130,7 +131,6 @@ public class Teleop extends OpMode {
         robot.init(hardwareMap, false);
 
         // Init telemetry
-        printer = new Printer(telemetry);
 
 
         player1 = gamepad1;
@@ -409,7 +409,17 @@ public class Teleop extends OpMode {
 
                 robot.capstoneArm.setPosition(servotarget);
             }
-
+            if (curgamepad2.a && curgamepad2.a != preValueA2) {
+               robot.slider.setTargetPosition(sliderCapstoneIntake);
+               target = sliderCapstoneIntake;
+               robot.capstoneArm.setPosition(capstoneintake);
+               capstoneState = 1;
+                robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.slider.setPower(1);
+                
+            }
+            preValueA2 = curgamepad2.a;
+            
 
             // Operate bucket deposit servo and is operated by player2 unless not in match mode
             if (curgamepad.a && curgamepad.a != preValueA) {
@@ -457,7 +467,7 @@ public class Teleop extends OpMode {
                     robot.slider.setPower(1);
                     robot.bucket.setPosition(.08);
                     robot.capstoneArm.setPosition(capstonerest);
-                    capstonebucketState = 0;
+                    capstoneState = 0;
                     bucketState = 0;
                     sliderstate = 0;
                     target = 0;
@@ -482,14 +492,14 @@ public class Teleop extends OpMode {
             //right bumper toggle for capstone arm
             if (player1.right_bumper && player1.right_bumper != preValueRBumper) {
 
-                if (capstonebucketState == 0) {
+                if (capstoneState == 0) {
                     robot.capstoneArm.setPosition(capstoneintake);
                     servotarget = capstoneintake;
-                    capstonebucketState = 1;
-                } else if (capstonebucketState == 1) {
+                    capstoneState = 1;
+                } else if (capstoneState == 1) {
                     robot.capstoneArm.setPosition(capstonecapping);
                     servotarget = capstonecapping;
-                    capstonebucketState = 0;
+                    capstoneState = 0;
                 }
 
             }
@@ -531,7 +541,7 @@ public class Teleop extends OpMode {
                 robot.slider.setPower(1);
                 robot.bucket.setPosition(.08);
                 robot.capstoneArm.setPosition(capstonerest);
-                capstonebucketState = 0;
+                capstoneState = 0;
                 bucketState = 0;
                 sliderstate = 0;
                 target = 0;
@@ -561,41 +571,40 @@ public class Teleop extends OpMode {
                 }
             }
             preValueStart = player1.start;
-            ArrayList<String> output = new ArrayList<>();
 
             if (practicemode) {
                 //OUTPUTTING bucketStateS OF VARIABLES
-                output.add("/////STATES/////");
-                output.add("Intake:" + intake);
-                output.add("bucket:" + bucketState);
-                output.add("Maxcounts:  " + maxCounts);
-                output.add("SliderState:" + sliderstate);
-                output.add("Slider Position is " + robot.slider.getCurrentPosition() + " and target of the slider is" + target);
-                output.add("Capstone:  " + servotarget);
+                telemetry.addLine("/////STATES/////");
+                telemetry.addLine("Intake:" + intake);
+                telemetry.addLine("bucket:" + bucketState);
+                telemetry.addLine("Maxcounts:  " + maxCounts);
+                telemetry.addLine("SliderState:" + sliderstate);
+                telemetry.addLine("Slider Position is " + robot.slider.getCurrentPosition() + " and target of the slider is" + target);
+                telemetry.addLine("Capstone:  " + servotarget);
                 //OUTPUTTING SPEED OF MOTORS
-                output.add("/////SPEEDS/////");
-                output.add("Drive Speed:" + speed);
-                output.add("Carousel speed = " + maxcarouselspeed + carouselmodifier);
-                output.add("Carousel speed modifier = " + carouselmodifier);
+                telemetry.addLine("/////SPEEDS/////");
+                telemetry.addLine("Drive Speed:" + speed);
+                telemetry.addLine("Carousel speed = " + (maxcarouselspeed + carouselmodifier));
+                telemetry.addLine("Carousel speed modifier = " + carouselmodifier);
                 //OTHER DATA
-                output.add("//////OTHER DATA/////");
-                output.add("Time" + runtime.seconds());
+                telemetry.addLine("//////OTHER DATA/////");
+                telemetry.addLine("Time" + runtime.seconds());
                 String gameModeTitle;
                 if (gamemode == 1) gameModeTitle = "DRIVER CONTROL";
                 else if (gamemode == 2) gameModeTitle = "GET CAPSTONE TIME";
                 else gameModeTitle = "ENDGAME";
-                output.add("Game Portion" + gamemode + gameModeTitle);
-                output.add("PracticeMode:  " + practicemode);
-                output.add("DualControlsActive:  " + dualcontrols);
+                telemetry.addLine("Game Portion" + gamemode + gameModeTitle);
+                telemetry.addLine("PracticeMode:  " + practicemode);
+                telemetry.addLine("DualControlsActive:  " + dualcontrols);
             } else {
-                output.add("Carousel speed = " + maxcarouselspeed + carouselmodifier);
-                output.add("Time" + runtime.seconds());
-                output.add("Game Portion" + gamemode);
-                output.add("DualControls" + dualcontrols);
-                output.add("practicemode" + practicemode);
+                telemetry.addLine("Carousel speed = " + maxcarouselspeed + carouselmodifier);
+                telemetry.addLine("Time" + runtime.seconds());
+                telemetry.addLine("Game Portion" + gamemode);
+                telemetry.addLine("DualControls" + dualcontrols);
+                telemetry.addLine("practicemode" + practicemode);
 
             }
-            //printer.printLines(output);
+            telemetry.update();
         } else if (runtime.seconds() > 121) {
             robot.carousel.setPower(0);
             robot.intake.setPower(0);

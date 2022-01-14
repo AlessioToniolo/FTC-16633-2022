@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.autonomous;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -18,10 +19,14 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 
+@Config
 @Autonomous
 public class AutoBlueLeft extends LinearOpMode {
     // Instance of Robot Class
     BaseRobot robot = new BaseRobot();
+
+    // todo TESTING DISTANCE
+    public static double distanceToMove = 1;
 
     // Delay ElapsedTime
     private ElapsedTime runtime = new ElapsedTime();
@@ -95,6 +100,8 @@ public class AutoBlueLeft extends LinearOpMode {
         printer.load();
 
         // TODO: movements
+        robot.move(distanceToMove, 4);
+        robot.turn(180, 4);
     }
 
     // Main Function that runs before the zone functions

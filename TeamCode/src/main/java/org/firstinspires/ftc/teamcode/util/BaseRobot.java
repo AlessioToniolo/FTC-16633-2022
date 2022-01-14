@@ -115,7 +115,7 @@ public class BaseRobot {
         double offset = (double) ((leftFront.getCurrentPosition() + leftRear.getCurrentPosition()
                 + rightFront.getCurrentPosition() + rightRear.getCurrentPosition()) / 4);
         // Adapt target to curr position
-        double target = PositionFields.COUNTS_PER_INCH * distance + offset;
+        double target = (PositionFields.COUNTS_PER_INCH * distance) + offset;
 
         // While
         if (distance > 0) {
