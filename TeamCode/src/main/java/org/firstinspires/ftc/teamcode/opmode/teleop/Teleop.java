@@ -97,7 +97,7 @@ public class Teleop extends OpMode {
     boolean rightStickButton = false;
     //variables which track bucketStates of servos and motors
     double speed = 1; //tracks speed of motors
-    double curspeed = 1;//tracks the durrent speed fo the motors and is used to remember the past speed when activating a speed boost
+    double curspeed = 1;//tracks the current speed fo the motors and is used to remember the past speed when activating a speed boost
     double intake = 0; //if 0 intake is off, if 1 intake is on -1 is intake is in reverse
     boolean redcarouselActive = false;//track if red and blue carousel are on
     boolean bluecarouselActive = false;
@@ -412,13 +412,35 @@ public class Teleop extends OpMode {
                 robot.capstoneArm.setPosition(servotarget);
             }
             if (curgamepad2.a && curgamepad2.a != preValueA2) {
-               robot.slider.setTargetPosition(sliderCapstoneIntake);
-               target = sliderCapstoneIntake;
-               robot.capstoneArm.setPosition(capstoneintake);
-               capstoneState = 1;
-               servotarget = capstoneintake;
-                robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.slider.setPower(1);
+                if(capstoneState == 0) {
+                    target = sliderCapstoneIntake;
+                    robot.slider.setTargetPosition(target);
+                    robot.capstoneArm.setPosition(capstoneintake);
+                    capstoneState = 1;
+                    servotarget = capstoneintake;
+                    robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    robot.slider.setPower(1);
+                }
+                else if(capstoneState == 1)
+                {
+                    target = 2500;
+                    robot.slider.setTargetPosition(target);
+                    robot.capstoneArm.setPosition(capstonecapping);
+                    capstoneState = 2;
+                    servotarget = capstonecapping;
+                    robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    robot.slider.setPower(1);
+                }
+                else if(capstoneState == 2)
+                {
+                    target = 0;
+                    robot.slider.setTargetPosition(target);
+                    robot.capstoneArm.setPosition(capstonerest);
+                    capstoneState = 0;
+                    servotarget = capstonerest;
+                    robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    robot.slider.setPower(1);
+                }
                 
             }
             preValueA2 = curgamepad2.a;
@@ -495,14 +517,12 @@ public class Teleop extends OpMode {
             //right bumper toggle for capstone arm
             if (player1.right_bumper && player1.right_bumper != preValueRBumper) {
 
-                if (capstoneState == 0) {
-                    robot.capstoneArm.setPosition(capstoneintake);
-                    servotarget = capstoneintake;
-                    capstoneState = 1;
-                } else if (capstoneState == 1) {
-                    robot.capstoneArm.setPosition(capstonecapping);
-                    servotarget = capstonecapping;
-                    capstoneState = 0;
+                if (speed >= 1) {
+                    speed = 1;
+                    curspeed = speed;
+                } else {
+                    speed += .25;
+                    curspeed = speed;
                 }
 
             }
