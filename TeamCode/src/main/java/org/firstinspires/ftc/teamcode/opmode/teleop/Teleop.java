@@ -242,6 +242,7 @@ public class Teleop extends OpMode {
             robot.leftRear.setPower(total1);
             robot.rightRear.setPower(total2);
 
+            robot.intake.setPower(player1.left_stick_x);//right stick x controlls intake
             double gotime = (5.0 / 3.0) / (maxcarouselspeed + carouselmodifier);//this determines howlong the spinner must spin based on the carousel speed
             if ((maxcarouselspeed + carouselmodifier) == 1) {
                 gotime = 1.5;
@@ -405,7 +406,10 @@ public class Teleop extends OpMode {
                 servotarget += servoPower / 500;//adds or subtracts between .01 and 1 to the target
                 if (servotarget >= .9) {
                     servotarget = .9;//if the target is greater than  1 than the servo target = 1
-                } else if (servotarget <= .24) {
+                }
+                else if(target > 100 && servotarget > 0)// if the linear slider is above a certain position than the capstone arm can be moved back all the way
+                {}
+                else if (servotarget <= .24 ) {
                     servotarget = .24;
                 }
 

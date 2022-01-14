@@ -8,7 +8,7 @@ public class PositionFields {
     public static int LOW = 200;
     public static int MIDDLE = 750;
     public static int TOP = 2000;
-    public static int sliderCapstoneIntake = 150;
+    public static int sliderCapstoneIntake = 579;
 
     // Intake Bar Positions
     public static double BUCKET_OVER = .35;
