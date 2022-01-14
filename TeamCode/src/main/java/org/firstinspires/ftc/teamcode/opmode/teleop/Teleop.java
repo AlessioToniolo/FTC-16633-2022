@@ -317,12 +317,13 @@ public class Teleop extends OpMode {
                 redStop = null;
                 blueStop = null;
                 blueGo = null;
-                if (!redcarouselActive) {
+                if (!redcarouselActive && !bluecarouselActive) {
                     robot.carousel.setPower(-1 * (maxcarouselspeed + carouselmodifier));
                     redcarouselActive = true;
                 } else {
                     robot.carousel.setPower(0);
                     redcarouselActive = false;
+                    bluecarouselActive = false;
                 }
             }
 
@@ -351,12 +352,13 @@ public class Teleop extends OpMode {
                 blueGo = null;
                 redGo = null;
                 redStop = null;
-                if (!bluecarouselActive) {
+                if (!bluecarouselActive && !redcarouselActive) {
                     robot.carousel.setPower(maxcarouselspeed + carouselmodifier);
                     bluecarouselActive = true;
                 } else {
                     robot.carousel.setPower(0);
                     bluecarouselActive = false;
+                    redcarouselActive = false;
                 }
 
             }
@@ -414,6 +416,7 @@ public class Teleop extends OpMode {
                target = sliderCapstoneIntake;
                robot.capstoneArm.setPosition(capstoneintake);
                capstoneState = 1;
+               servotarget = capstoneintake;
                 robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.slider.setPower(1);
                 
@@ -571,37 +574,47 @@ public class Teleop extends OpMode {
                 }
             }
             preValueStart = player1.start;
-
+            String gameModeTitle;
+            if (gamemode == 1) gameModeTitle = "DRIVER CONTROL";
+            else if (gamemode == 2) gameModeTitle = "GET CAPSTONE TIME";
+            else gameModeTitle = "ENDGAME";
             if (practicemode) {
                 //OUTPUTTING bucketStateS OF VARIABLES
                 telemetry.addLine("/////STATES/////");
                 telemetry.addLine("Intake:" + intake);
                 telemetry.addLine("bucket:" + bucketState);
                 telemetry.addLine("Maxcounts:  " + maxCounts);
-                telemetry.addLine("SliderState:" + sliderstate);
+                String sliderStateStr;
+                if(sliderstate == 0) sliderStateStr = "Intake";
+                else if(sliderstate == 1)sliderStateStr = "Low level";
+                else if(sliderstate == 1)sliderStateStr = "Middle Level";
+                else if(sliderstate == 1)sliderStateStr = "Top Level";
+                else sliderStateStr = "Capping Level";
+
+                telemetry.addLine("SliderState: " + sliderStateStr);
                 telemetry.addLine("Slider Position is " + robot.slider.getCurrentPosition() + " and target of the slider is" + target);
                 telemetry.addLine("Capstone:  " + servotarget);
+                telemetry.addLine();
+
                 //OUTPUTTING SPEED OF MOTORS
                 telemetry.addLine("/////SPEEDS/////");
                 telemetry.addLine("Drive Speed:" + speed);
                 telemetry.addLine("Carousel speed = " + (maxcarouselspeed + carouselmodifier));
                 telemetry.addLine("Carousel speed modifier = " + carouselmodifier);
                 //OTHER DATA
+                telemetry.addLine();
                 telemetry.addLine("//////OTHER DATA/////");
-                telemetry.addLine("Time" + runtime.seconds());
-                String gameModeTitle;
-                if (gamemode == 1) gameModeTitle = "DRIVER CONTROL";
-                else if (gamemode == 2) gameModeTitle = "GET CAPSTONE TIME";
-                else gameModeTitle = "ENDGAME";
-                telemetry.addLine("Game Portion" + gamemode + gameModeTitle);
+                telemetry.addLine("Time: " + runtime.seconds());
+                telemetry.addLine("Game Portion: " + gameModeTitle);
                 telemetry.addLine("PracticeMode:  " + practicemode);
                 telemetry.addLine("DualControlsActive:  " + dualcontrols);
             } else {
-                telemetry.addLine("Carousel speed = " + maxcarouselspeed + carouselmodifier);
                 telemetry.addLine("Time" + runtime.seconds());
-                telemetry.addLine("Game Portion" + gamemode);
-                telemetry.addLine("DualControls" + dualcontrols);
-                telemetry.addLine("practicemode" + practicemode);
+                telemetry.addLine("Game Portion:" + gamemode + " " + gameModeTitle);
+                telemetry.addLine("DualControls: " + dualcontrols);
+                telemetry.addLine("PracticeMode: " + practicemode);
+                telemetry.addLine("Carousel speed = " + maxcarouselspeed + carouselmodifier);
+
 
             }
             telemetry.update();
