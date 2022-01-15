@@ -241,8 +241,9 @@ public class Teleop extends OpMode {
             robot.rightFront.setPower(total2);
             robot.leftRear.setPower(total1);
             robot.rightRear.setPower(total2);
-
-            robot.intake.setPower(player1.left_stick_x);//right stick x controlls intake
+            if(intake ==0) {
+                robot.intake.setPower(player1.left_stick_x);//right stick x controlls intake
+            }
             double gotime = (5.0 / 3.0) / (maxcarouselspeed + carouselmodifier);//this determines howlong the spinner must spin based on the carousel speed
             if ((maxcarouselspeed + carouselmodifier) == 1) {
                 gotime = 1.5;
