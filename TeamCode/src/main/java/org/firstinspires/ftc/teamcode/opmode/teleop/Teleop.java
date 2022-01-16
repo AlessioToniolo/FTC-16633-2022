@@ -61,8 +61,8 @@ public class Teleop extends OpMode {
 
     the player1 gamepad object controls all of the first
     the player2 gamepad object controls all of the second
-    the curgamepad controls all of the third
-    the curgamepad2 controls all of the fourth
+    the curgamepad controls all of the fouth
+    the curgamepad2 controls all of the third
 
     1-> drive, intake and reverse intake, capstone automatic positions, drivespeed decreaser, noramal carousels, speed cap
     2 ->  timed carousel spinners,  carosuel speed modifiers, linear slider positions
@@ -93,6 +93,7 @@ public class Teleop extends OpMode {
     boolean preValueBack = false;
     boolean preValueStart = false;
     boolean preValueGuide = false;
+    boolean preValueGuide2 = false;
     boolean leftStickButton = false;
     boolean rightStickButton = false;
     //variables which track bucketStates of servos and motors
@@ -198,12 +199,11 @@ public class Teleop extends OpMode {
 
             if (!dualcontrols)//if we arent using dualcontrols then witch all necessary controls to player 1
             {
+                player1 = gamepad1;
+                player2 = gamepad2;
                 curgamepad = gamepad1;
                 curgamepad2 = gamepad2;
 
-            } else {
-                curgamepad = gamepad2;
-                curgamepad2 = gamepad1;
             }
 
 
@@ -582,14 +582,36 @@ public class Teleop extends OpMode {
             //currently changes gamepad in control
 
             // if teh center button is presed than matchmode is turned off if matchmode is off all essentail controls go to player1
-            if (player1.guide && player1.guide != preValueGuide) {
+            if (gamepad1.guide && gamepad1.guide != preValueGuide) {
                 if (dualcontrols) {
                     dualcontrols = false;
+                    player1 = gamepad1;
+                    curgamepad2 = gamepad1;
+                    player2 = gamepad2;
+                    curgamepad = gamepad2;
                 } else if (!dualcontrols) {
                     dualcontrols = true;
                 }
             }
-            preValueGuide = player1.guide;
+            preValueGuide = gamepad1.guide;
+
+            if(gamepad2.guide && gamepad2.guide != preValueGuide2 )
+            {
+                if(dualcontrols)
+                {
+                    dualcontrols = false;
+                    player1 = gamepad2;
+                    curgamepad2 = gamepad2;
+                    player2 = gamepad1;
+                    curgamepad = gamepad1;
+                }
+                else if(!dualcontrols)
+                {
+                    dualcontrols = true;
+                }
+            }
+            preValueGuide2 = player2.guide;
+
 
             if (player1.start && player1.start != preValueStart) {
                 if (practicemode) {
