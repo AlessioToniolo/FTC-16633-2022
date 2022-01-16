@@ -5,7 +5,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import java.util.ArrayList;
 
 public class Printer {
-    private Telemetry t;
+    private final Telemetry t;
 
     // Constructor
     public Printer(Telemetry telemetry) {

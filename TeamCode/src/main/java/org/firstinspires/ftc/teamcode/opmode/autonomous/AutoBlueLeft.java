@@ -29,7 +29,7 @@ public class AutoBlueLeft extends LinearOpMode {
     public static double distanceToMove = 1;
 
     // Delay ElapsedTime
-    private ElapsedTime runtime = new ElapsedTime();
+    private final ElapsedTime runtime = new ElapsedTime();
 
     // OpenCV
     WebcamName webcamName;
