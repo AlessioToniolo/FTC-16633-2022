@@ -61,8 +61,8 @@ public class Teleop extends OpMode {
 
     the player1 gamepad object controls all of the first
     the player2 gamepad object controls all of the second
-    the curgamepad controls all of the fouth
-    the curgamepad2 controls all of the third
+    the curgamepad controls all of the third
+    the curgamepad2 controls all of the fourth
 
     1-> drive, intake and reverse intake, capstone automatic positions, drivespeed decreaser, noramal carousels, speed cap
     2 ->  timed carousel spinners,  carosuel speed modifiers, linear slider positions
@@ -197,12 +197,12 @@ public class Teleop extends OpMode {
             double total1;
             double total2;
 
-            if (!dualcontrols)//if we arent using dualcontrols then witch all necessary controls to player 1
+            if (dualcontrols)
             {
                 player1 = gamepad1;
                 player2 = gamepad2;
-                curgamepad = gamepad1;
-                curgamepad2 = gamepad2;
+                curgamepad = gamepad2;
+                curgamepad2 = gamepad1;
 
             }
 
@@ -586,9 +586,9 @@ public class Teleop extends OpMode {
                 if (dualcontrols) {
                     dualcontrols = false;
                     player1 = gamepad1;
-                    curgamepad2 = gamepad1;
+                    curgamepad2 = gamepad2;
                     player2 = gamepad2;
-                    curgamepad = gamepad2;
+                    curgamepad = gamepad1;
                 } else if (!dualcontrols) {
                     dualcontrols = true;
                 }
@@ -601,9 +601,9 @@ public class Teleop extends OpMode {
                 {
                     dualcontrols = false;
                     player1 = gamepad2;
-                    curgamepad2 = gamepad2;
+                    curgamepad2 = gamepad1;
                     player2 = gamepad1;
-                    curgamepad = gamepad1;
+                    curgamepad = gamepad2;
                 }
                 else if(!dualcontrols)
                 {
