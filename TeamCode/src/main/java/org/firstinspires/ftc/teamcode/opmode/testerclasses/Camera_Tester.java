@@ -31,53 +31,78 @@ public class Camera_Tester extends OpMode {
 
     public void loop() {
         if (gamepad1.left_bumper && gamepad1.left_bumper != preValueLBumper) {
-            width -= 2;
+            width -= 5;
+            closeCamera();
+            openCamera();
         }
         preValueLBumper = gamepad1.left_bumper;
 
         if (gamepad1.right_bumper && gamepad1.right_bumper != preValueRBumper) {
-            width += 2;
+            width += 5;
+            closeCamera();
+            openCamera();
         }
         preValueRBumper = gamepad1.right_bumper;
-        if (gamepad1.a && gamepad1.a != preValueA) {
-            if(!cameraOpen) {//if the camera isnt open lets open it
-                cameraOpen = true;
-                webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
-                camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName);
-                myPipeline = new Pipeline_Target_Detect(width);
-                camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-                    @Override
-                    public void onOpened() {
-                        camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
-                        camera.setPipeline(myPipeline);
-                    }
 
-                    @Override
-                    public void onError(int errorCode) {
-                    }
-                });
-                xPos = myPipeline.getXPos();
-                telemetry.addLine("XPOs: " + xPos);
-                if (xPos < 100) {
-                    zone = 1;
-                } else if (xPos > 200) {
-                    zone = 3;
-                } else {
-                    zone = 2;
-                }
-                telemetry.addLine("Zone: " + zone);
+        if(cameraOpen)
+        {
+            xPos = myPipeline.getXPos();
+            if (xPos < 100) {
+                zone = 1;
+            } else if (xPos > 200) {
+                zone = 3;
+            } else {
+                zone = 2;
             }
-            else if(cameraOpen) {
+            telemetry.addLine("XPOs: " + xPos);
+            telemetry.addLine("Zone: " + zone);
+        }
+
+        if (gamepad1.a && gamepad1.a != preValueA) {
+
+            if (!cameraOpen) {//if the camera isnt open lets open it
+                cameraOpen = true;
+                openCamera();
+            }
+            else if (cameraOpen) {
                 cameraOpen = false;
-                camera.stopStreaming();
-                camera.closeCameraDevice();
+                closeCamera();
+
             }
         }
         preValueA = gamepad1.a;
+
         telemetry.addLine("Width: " + width);
-        telemetry.addLine("Camera OPen" + cameraOpen);
+        telemetry.addLine("Camera Open: " + cameraOpen);
         telemetry.update();
+    }
+
+    private void openCamera()
+    {
+        webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName);
+        myPipeline = new Pipeline_Target_Detect(width);
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+                camera.setPipeline(myPipeline);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+            }
+        });
+    }
+    private void closeCamera()
+    {
+        camera.stopStreaming();
+        camera.closeCameraDevice();
     }
 
 
 }
+
+
+
+
