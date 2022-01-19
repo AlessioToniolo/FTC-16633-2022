@@ -106,11 +106,11 @@ public class AutoBlueLeft extends LinearOpMode {
         // Movement before the hub
         drive(10);
         delay(0.5);
-        turn(-90);
+        turn(90);
         delay(0.5);
         drive(13);
         delay(0.5);
-        turn(85);
+        turn(-85);
         delay(0.5);
         drive(-8);
 
@@ -138,7 +138,7 @@ public class AutoBlueLeft extends LinearOpMode {
         // Parking movement
         drive(4.5);
         delay(0.5);
-        turn(85);
+        turn(-85);
         delay(0.5);
         drive(57.5);
     }

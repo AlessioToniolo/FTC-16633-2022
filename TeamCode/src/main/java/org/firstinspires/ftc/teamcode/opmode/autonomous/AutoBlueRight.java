@@ -38,14 +38,5 @@ public class AutoBlueRight extends LinearOpMode {
 
     }
 
-    // Functions for the different zones
-    private void zone1() {
-    }
-
-    private void zone2() {
-    }
-
-    private void zone3() {
-    }
 
 }
