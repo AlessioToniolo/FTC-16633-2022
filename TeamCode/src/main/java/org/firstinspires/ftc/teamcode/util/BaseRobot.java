@@ -101,9 +101,7 @@ public class BaseRobot {
         }
     }
 
-    public void driveStraightInches(double speed,
-                                    double inches,
-                                    double timeoutS) {
+    public void drive(double inches, double speed, double timeoutS) {
         int newLeftFrontTarget;
         int newRightFrontTarget;
         int newLeftRearTarget;
@@ -250,6 +248,14 @@ public class BaseRobot {
         rightFront.setPower(0);
         leftRear.setPower(0);
         rightRear.setPower(0);
+    }
+
+    public void reset() {
+        slider.setTargetPosition(0);
+        slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slider.setPower(1);
+        bucket.setPosition(PositionFields.BUCKET_INTAKE);
+        capstoneArm.setPosition(PositionFields.CAPSTONE_REST);
     }
 
     // Move forward and backward using a PID loop and motor encoders along with a heading PID from the IMU
@@ -418,7 +424,7 @@ public class BaseRobot {
             imuTime = new ElapsedTime();
             while (imuTime.seconds() < timeoutS) {
                 // Compute the current error
-                currentError = imuTarget - getIntegratedHeading();
+                currentError = imuTarget + getIntegratedHeading();
 
                 // Compute
                 p = PIDFields.IMU_TURN_PID.p * currentError;

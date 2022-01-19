@@ -1,13 +1,15 @@
 package org.firstinspires.ftc.teamcode.opmode.autonomous;
-import org.firstinspires.ftc.teamcode.opmode.autonomous.opencvpipeline.Pipeline_Target_Detect;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.opmode.autonomous.opencvpipeline.Pipeline_Target_Detect;
 import org.firstinspires.ftc.teamcode.util.BaseRobot;
+import org.firstinspires.ftc.teamcode.util.fields.PositionFields;
 import org.firstinspires.ftc.teamcode.util.helpers.Printer;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -51,16 +53,15 @@ public class AutoBlueLeft extends LinearOpMode {
         printer.print("Ready to start!");
 
         // Wait for User to Start
-        waitForStart();
 
         // Clear Previous Telemetry
         printer.load();
+        waitForStart();
 
         // Init Camera
-        // TODO change webcam to webcam 3 once it is installed
-        webcamName = hardwareMap.get(WebcamName.class, "Webcam 2");
+        webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
         camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName);
-        myPipeline = new Pipeline_Target_Detect();
+        myPipeline = new Pipeline_Target_Detect(25);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
@@ -73,9 +74,11 @@ public class AutoBlueLeft extends LinearOpMode {
             }
         });
 
+
         // Wait for Camera to Start Up and Detect
         delay(2);
         xPos = myPipeline.getXPos();
+        printer.addInfo("XPos: ", xPos);
         // Read Detection
         if (xPos < 100) {
             zone = 1;
@@ -94,22 +97,50 @@ public class AutoBlueLeft extends LinearOpMode {
         printer.addInfo("Zone: ", zone);
         printer.load();
 
-        // TODO: movements
-        robot.move(distanceToMove, 4);
-        robot.turn(180, 4);
+        // Autonomous Movements
+        movement();
     }
 
     // Main Function that runs before the zone functions
-    private void mainMovement() {
-        // TODO going to the hub movement
+    private void movement() {
+        // Movement before the hub
+        drive(10);
+        delay(0.5);
+        turn(-90);
+        delay(0.5);
+        drive(13);
+        delay(0.5);
+        turn(85);
+        delay(0.5);
+        drive(-8);
+
+        // Depositing Movement
         if (zone == 1) {
-            zone1();
+            robot.slider.setTargetPosition(PositionFields.LOW);
+            robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.slider.setPower(1);
+            delay(2);
         } else if (zone == 2) {
-            zone2();
+            robot.slider.setTargetPosition(PositionFields.MIDDLE);
+            robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.slider.setPower(1);
+            delay(2);
         } else {
-            zone3();
+            robot.slider.setTargetPosition(PositionFields.TOP);
+            robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.slider.setPower(1);
+            delay(2);
         }
-        // TODO rest of movements
+        robot.bucket.setPosition(1);
+        delay(2);
+        robot.reset();
+
+        // Parking movement
+        drive(4.5);
+        delay(0.5);
+        turn(85);
+        delay(0.5);
+        drive(57.5);
     }
 
     // Functions for the different zones
@@ -128,8 +159,19 @@ public class AutoBlueLeft extends LinearOpMode {
     public void delay(double t) { // Imitates the Arduino delay function
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < t)) {
-            //telemetry.addData("Time: ", runtime.seconds());
-            //telemetry.update();
         }
+    }
+
+    // Functions with default speed and timeoutS
+    public void drive(double distance) {
+        robot.drive(distance, 1, 5);
+    }
+
+    public void turn(double angle) {
+        robot.turn(angle, 1.5);
+    }
+
+    public void turn(double angle, double timeouts) {
+        robot.turn(angle, timeouts);
     }
 }
