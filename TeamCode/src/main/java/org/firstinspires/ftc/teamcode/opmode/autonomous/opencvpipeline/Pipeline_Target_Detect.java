@@ -11,17 +11,20 @@ import org.openftc.easyopencv.OpenCvPipeline;
 public class Pipeline_Target_Detect extends OpenCvPipeline {
     private int xPos =-1;
     private int width;
+    private int height;
     public Mat templateMat;
 
     public Pipeline_Target_Detect() {
         width = 32;
-        templateMat = new Mat(64, width, CvType.CV_8UC1);
+        height = 64;
+        templateMat = new Mat(height, width, CvType.CV_8UC1);
         buildTemplate();
     }
-    public Pipeline_Target_Detect(int width)
+    public Pipeline_Target_Detect(int width, int height)
     {
         this.width = width;
-        templateMat = new Mat(64, width, CvType.CV_8UC1);
+        this.height = height;
+        templateMat = new Mat(height, width, CvType.CV_8UC1);
         buildTemplate();
     }
 
@@ -51,18 +54,18 @@ public class Pipeline_Target_Detect extends OpenCvPipeline {
     }
 
     private void buildTemplate() {
-        int[][] template = new int[64][width];
-        for (int r = 0; r < 32; r++) {
+        int[][] template = new int[height][width];
+        for (int r = 0; r < height / 2; r++) {
             for (int c = 0; c < width; c++) {//0 black 255 is white
                 template[r][c] = 255;
             }
         }
-        for (int r = 32; r < 64; r++) {
+        for (int r = height/2; r < height; r++) {
             for (int c = 0; c < width; c++) {
                 template[r][c] = 0;
             }
         }
-        for (int r = 0; r < 64; r++) {
+        for (int r = 0; r < height; r++) {
             for (int c = 0; c < width; c++) {
                 templateMat.put(r, c, template[r][c]);
             }

@@ -61,7 +61,7 @@ public class AutoRedRight extends LinearOpMode {
         // Init Camera
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
         camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName);
-        myPipeline = new Pipeline_Target_Detect(25);
+        myPipeline = new Pipeline_Target_Detect(25, 40);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
@@ -136,7 +136,7 @@ public class AutoRedRight extends LinearOpMode {
         robot.reset();
 
         // Parking movement
-        drive(4.5);
+        drive(8);
         delay(0.5);
         turn(85);
         delay(0.5);

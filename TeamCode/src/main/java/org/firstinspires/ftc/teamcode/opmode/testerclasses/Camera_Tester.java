@@ -21,8 +21,13 @@ public class Camera_Tester extends OpMode {
     int zone = 3;
     double xPos = -1;
     int width = 64;
+    int height = 64;
+    int callTimes = 0;
+    int callTimes2 = 0;
     boolean preValueLBumper = false;
     boolean preValueRBumper = false;
+    boolean preValueX = false;
+    boolean preValueB = false;
     boolean preValueA = false;
     boolean cameraOpen = false;
 
@@ -43,6 +48,42 @@ public class Camera_Tester extends OpMode {
             openCamera();
         }
         preValueRBumper = gamepad1.right_bumper;
+        if (gamepad1.x && gamepad1.x != preValueX) {
+            height -= 5;
+            closeCamera();
+            openCamera();
+        }
+        preValueLBumper = gamepad1.x;
+        if (gamepad1.b && gamepad1.b != preValueB) {
+            height += 5;
+            closeCamera();
+            openCamera();
+        }
+        preValueB= gamepad1.b;
+        if(Math.abs( gamepad1.left_stick_x) > 0)
+        {
+            callTimes++;
+            if(callTimes > 20)
+            {
+                callTimes = 0;
+                width += Math.floor(gamepad1.left_stick_x * 2.9);//if pushed all the way to the side will decrease or increase by two if middle by 1 if
+                closeCamera();
+                openCamera();
+            }
+        }
+        if(Math.abs( gamepad1.left_stick_y) > 0)
+        {
+            callTimes2++;
+            if(callTimes2 > 20)
+            {
+                callTimes2 = 0;
+                height += Math.floor(gamepad1.left_stick_y * 2.9);//if pushed all the way to the side will decrease or increase by two if middle by 1 if
+                closeCamera();
+                openCamera();
+            }
+        }
+
+
 
         if(cameraOpen)
         {
@@ -81,7 +122,7 @@ public class Camera_Tester extends OpMode {
     {
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
         camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName);
-        myPipeline = new Pipeline_Target_Detect(width);
+        myPipeline = new Pipeline_Target_Detect(width, height);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
