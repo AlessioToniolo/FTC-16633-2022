@@ -136,7 +136,7 @@ public class AutoRedRight extends LinearOpMode {
         robot.reset();
 
         // Parking movement
-        drive(6);
+        drive(2);
         delay(0.5);
         turn(85);
         delay(0.5);

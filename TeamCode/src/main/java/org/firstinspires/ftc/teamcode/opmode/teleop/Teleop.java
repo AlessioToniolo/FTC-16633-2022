@@ -8,9 +8,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.util.BaseRobot;
 import org.firstinspires.ftc.teamcode.util.fields.PositionFields;
-import org.firstinspires.ftc.teamcode.util.helpers.Printer;
-
-import java.util.ArrayList;
 
 //things I still want to make
 /*
@@ -564,10 +561,10 @@ public class Teleop extends OpMode {
             preValueLBumper2 = player2.left_bumper;
             //left bumper sets bucket and slider to intake position
             if ((player1.y && player1.y != preValueY) || (player2.y && player2.y != preValueY2)) {
+                robot.bucket.setPosition(bucketintake);
                 robot.slider.setTargetPosition(0);
                 robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.slider.setPower(1);
-                robot.bucket.setPosition(.08);
+                robot.slider.setPower(.8);
                 robot.capstoneArm.setPosition(capstonerest);
                 capstoneState = 0;
                 bucketState = 0;

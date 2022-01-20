@@ -9,7 +9,6 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-
 @Autonomous
 //@Disabled
 public class CameraTesterAS extends OpMode {
@@ -39,7 +38,7 @@ BaseRobot robot = new BaseRobot();
 
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
         camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName);
-        myPipeline = new Pipeline_Target_Detect(25, 40);
+        myPipeline = new Pipeline_Target_Detect(20, 40);
 
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {

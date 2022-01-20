@@ -50,31 +50,26 @@ public class CameraTester extends OpMode {
         preValueRBumper = gamepad1.right_bumper;
         if (gamepad1.x && gamepad1.x != preValueX) {
             height -= 5;
-            closeCamera();
-            openCamera();
+            resetCamera();
         }
         preValueLBumper = gamepad1.x;
         if (gamepad1.b && gamepad1.b != preValueB) {
             height += 5;
-            closeCamera();
-            openCamera();
+            resetCamera();
         }
         preValueB= gamepad1.b;
         if(Math.abs( gamepad1.left_stick_x) > 0)
         {
 
-                callTimes = 0;
                 width += Math.floor(gamepad1.left_stick_x * 2.9);//if pushed all the way to the side will decrease or increase by two if middle by 1 if
-                closeCamera();
-                openCamera();
+                resetCamera();
 
         }
         if(Math.abs( gamepad1.left_stick_y) > 0)
         {
 
                 height += Math.floor(gamepad1.left_stick_y * 2.9);//if pushed all the way to the side will decrease or increase by two if middle by 1 if
-                closeCamera();
-                openCamera();
+                resetCamera();
 
         }
 
@@ -115,7 +110,19 @@ public class CameraTester extends OpMode {
         telemetry.addLine("Camera Open: " + cameraOpen);
         telemetry.update();
     }
-
+    private void resetCamera()
+    {
+        if(cameraOpen)
+        {
+            closeCamera();
+            openCamera();
+        }
+        else
+        {
+            openCamera();
+            cameraOpen = true;
+        }
+    }
     private void openCamera()
     {
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
