@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode.testerclasses;
+package org.firstinspires.ftc.teamcode.opmode.testers;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.util.BaseRobot;
 
 @Disabled
 @TeleOp
-public class Motor_Tester extends OpMode {
+public class MotorTester extends OpMode {
     // Use the class created to define a Robot's hardware
     BaseRobot robot = new BaseRobot();
 

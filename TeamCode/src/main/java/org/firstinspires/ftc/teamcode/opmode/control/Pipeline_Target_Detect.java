@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode.autonomous.opencvpipeline;
+package org.firstinspires.ftc.teamcode.opmode.control;
 
 import org.opencv.core.Core;
 import org.opencv.core.CvType;

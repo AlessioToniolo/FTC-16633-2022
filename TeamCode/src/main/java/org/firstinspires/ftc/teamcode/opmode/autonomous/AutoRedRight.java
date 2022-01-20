@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.opmode.autonomous.opencvpipeline.Pipeline_Target_Detect;
+import org.firstinspires.ftc.teamcode.opmode.control.Pipeline_Target_Detect;
 import org.firstinspires.ftc.teamcode.util.BaseRobot;
 import org.firstinspires.ftc.teamcode.util.fields.PositionFields;
 import org.firstinspires.ftc.teamcode.util.helpers.Printer;
@@ -61,7 +61,7 @@ public class AutoRedRight extends LinearOpMode {
         // Init Camera
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
         camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName);
-        myPipeline = new Pipeline_Target_Detect(25, 40);
+        myPipeline = new Pipeline_Target_Detect(5, 35);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
@@ -112,7 +112,7 @@ public class AutoRedRight extends LinearOpMode {
         delay(0.5);
         turn(85);
         delay(0.5);
-        drive(-8);
+        drive(-7);
 
         // Depositing Movement
         if (zone == 1) {
@@ -136,7 +136,7 @@ public class AutoRedRight extends LinearOpMode {
         robot.reset();
 
         // Parking movement
-        drive(8);
+        drive(6);
         delay(0.5);
         turn(85);
         delay(0.5);

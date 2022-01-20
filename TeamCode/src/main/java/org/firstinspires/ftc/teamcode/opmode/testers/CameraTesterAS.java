@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.opmode.autonomous;
+package org.firstinspires.ftc.teamcode.opmode.testers;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.opmode.autonomous.opencvpipeline.Pipeline_Target_Detect;
+import org.firstinspires.ftc.teamcode.opmode.control.Pipeline_Target_Detect;
 import org.firstinspires.ftc.teamcode.util.BaseRobot;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -39,7 +39,7 @@ BaseRobot robot = new BaseRobot();
 
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
         camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName);
-        myPipeline = new Pipeline_Target_Detect(32, 40);
+        myPipeline = new Pipeline_Target_Detect(25, 40);
 
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {

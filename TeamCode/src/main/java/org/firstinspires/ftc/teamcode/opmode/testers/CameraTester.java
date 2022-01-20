@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.opmode.testerclasses;
+package org.firstinspires.ftc.teamcode.opmode.testers;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.opmode.autonomous.opencvpipeline.Pipeline_Target_Detect;
+import org.firstinspires.ftc.teamcode.opmode.control.Pipeline_Target_Detect;
 import org.firstinspires.ftc.teamcode.util.BaseRobot;
 
 import org.openftc.easyopencv.OpenCvCamera;
@@ -13,7 +13,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @TeleOp
-public class Camera_Tester extends OpMode {
+public class CameraTester extends OpMode {
     BaseRobot robot = new BaseRobot();
     WebcamName webcamName;
     OpenCvCamera camera;
@@ -62,25 +62,20 @@ public class Camera_Tester extends OpMode {
         preValueB= gamepad1.b;
         if(Math.abs( gamepad1.left_stick_x) > 0)
         {
-            callTimes++;
-            if(callTimes > 20)
-            {
+
                 callTimes = 0;
                 width += Math.floor(gamepad1.left_stick_x * 2.9);//if pushed all the way to the side will decrease or increase by two if middle by 1 if
                 closeCamera();
                 openCamera();
-            }
+
         }
         if(Math.abs( gamepad1.left_stick_y) > 0)
         {
-            callTimes2++;
-            if(callTimes2 > 20)
-            {
-                callTimes2 = 0;
+
                 height += Math.floor(gamepad1.left_stick_y * 2.9);//if pushed all the way to the side will decrease or increase by two if middle by 1 if
                 closeCamera();
                 openCamera();
-            }
+
         }
 
 
@@ -114,6 +109,9 @@ public class Camera_Tester extends OpMode {
         preValueA = gamepad1.a;
 
         telemetry.addLine("Width: " + width);
+        telemetry.addLine("Height: " + height);
+
+
         telemetry.addLine("Camera Open: " + cameraOpen);
         telemetry.update();
     }

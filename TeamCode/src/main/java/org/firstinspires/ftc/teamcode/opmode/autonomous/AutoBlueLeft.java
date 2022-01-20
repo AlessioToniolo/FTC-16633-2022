@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.opmode.autonomous.opencvpipeline.Pipeline_Target_Detect;
+import org.firstinspires.ftc.teamcode.opmode.control.Pipeline_Target_Detect;
 import org.firstinspires.ftc.teamcode.util.BaseRobot;
 import org.firstinspires.ftc.teamcode.util.fields.PositionFields;
 import org.firstinspires.ftc.teamcode.util.helpers.Printer;
