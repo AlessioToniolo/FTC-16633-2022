@@ -39,6 +39,8 @@ public class BaseRobot {
     double integratedHeading = 0;
     private final ElapsedTime period = new ElapsedTime();
 
+    public double currentOrientation = 0;
+
     // Constructor - leave this blank
     public BaseRobot() {
     }
@@ -381,6 +383,8 @@ public class BaseRobot {
 
     // Turn Using the IMU and PID
     public void turn(double deg, double timeoutS) {
+        if(deg + currentOrientation >= 360) currentOrientation = (deg + currentOrientation) -360;
+        else currentOrientation += deg;
         // p stands for proportional
         double p;
         // d stands for derivative and gets the current rate of change
@@ -554,7 +558,8 @@ public class BaseRobot {
     public void pointTurnDegrees(double speed,
                                  double deg,
                                  double timeoutS) {
-
+        if(deg + currentOrientation >= 360) currentOrientation = (deg + currentOrientation) -360;
+        else currentOrientation += deg;
         int newLeftFrontTarget;
         int newRightFrontTarget;
         int newLeftRearTarget;
@@ -633,6 +638,9 @@ public class BaseRobot {
             //  sleep(250);   // optional pause after each move
         }
 
+    }
+    public double getOrientation() {
+        return currentOrientation;
     }
 }
 
