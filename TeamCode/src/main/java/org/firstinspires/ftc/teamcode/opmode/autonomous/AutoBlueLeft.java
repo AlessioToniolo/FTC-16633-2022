@@ -106,14 +106,28 @@ public class AutoBlueLeft extends LinearOpMode {
         // Movement before the hub
         drive(10);
         delay(0.5);
-        turn(-90);
+        turn(90);
         delay(0.5);
         drive(13);
         delay(0.5);
-        turn(85);
+        turn(90);
         delay(0.5);
-        drive(-8);
+        drive(-7);
 
+        depositBlock();
+        delay(2);
+        robot.reset();
+
+        // Parking movement
+        drive(8);
+        delay(0.5);
+        turn(-90);
+        delay(0.5);
+        drive(57.5);
+    }
+
+    private void depositBlock()
+    {
         // Depositing Movement
         if (zone == 1) {
             robot.slider.setTargetPosition(PositionFields.LOW);
@@ -132,28 +146,6 @@ public class AutoBlueLeft extends LinearOpMode {
             delay(2);
         }
         robot.bucket.setPosition(1);
-        delay(2);
-        robot.reset();
-
-        // Parking movement
-        drive(8);
-        delay(0.5);
-        turn(-85);
-        delay(0.5);
-        drive(57.5);
-    }
-
-    // Functions for the different zones
-    private void zone1() {
-        // TODO
-    }
-
-    private void zone2() {
-        // TODO
-    }
-
-    private void zone3() {
-        // TODO
     }
 
     public void delay(double t) { // Imitates the Arduino delay function

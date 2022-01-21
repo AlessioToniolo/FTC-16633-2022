@@ -564,7 +564,7 @@ public class Teleop extends OpMode {
                 robot.bucket.setPosition(bucketintake);
                 robot.slider.setTargetPosition(0);
                 robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.slider.setPower(.8);
+                robot.slider.setPower(.9);
                 robot.capstoneArm.setPosition(capstonerest);
                 capstoneState = 0;
                 bucketState = 0;

@@ -39,6 +39,7 @@ public class PositionFields {
     // For Encoder Functions
     public static double COUNTS_PER_MOTOR_REV = 537.6;
     public static double MOTOR_RPM = 312;
+    public static double turnMod = 4;
     public static double DRIVE_GEAR_REDUCTION = 1.0; // This is < 1.0 if geared UP
     public static double WHEEL_DIAMETER_INCHES = 4; // For figuring out circumference
     public static double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);

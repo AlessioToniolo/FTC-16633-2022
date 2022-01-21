@@ -560,7 +560,7 @@ public class BaseRobot {
         int newRightRearTarget;
 
         // Reverse inches
-        deg = deg * -1;
+        deg = deg * -1 * PositionFields.turnMod;
 
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

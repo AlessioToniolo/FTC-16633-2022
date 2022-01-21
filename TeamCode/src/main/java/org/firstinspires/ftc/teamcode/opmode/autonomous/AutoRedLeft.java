@@ -43,7 +43,6 @@ public class AutoRedLeft extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         // Initialize telemetry
         printer = new Printer(telemetry);
-
         // Tell User to Wait For Start (to allow motors to instantiate)
         printer.print("Wait for Start!");
 
@@ -104,28 +103,31 @@ public class AutoRedLeft extends LinearOpMode {
 
     // Main Function that runs before the zone functions
     private void movement() {
+        robot.reset();
+
         // Movement before the hub
-        drive(8);
+        drive(8);//move forrward right before the barcode
         delay(0.5);
         turn(-90);
         delay(0.5);
-        drive(24);
+        drive(15);//turn and move to before the wall
         delay(0.5);
-        turn(-90);
-        delay(0.5);
-        drive(4);
-
-        // we are at carousel
-        robot.carousel.setPower(.8);
-        delay(1.5);
-        robot.carousel.setPower(0);
-        delay(.5);
-        drive(24);
-        delay(.5);
         turn(90);
-        drive(12);
+        delay(0.5);
+        drive(26);//turn and move past barcode
+        delay(0.5);
+        turn(-90);
+        drive(-24);//turn and move to carousel
+        depositBlock();
+        delay(.5);
+        drive(24);
+        robot.reset();
+        //add parking and carousel
+    }
 
-
+    // Functions for the different zones
+    private void depositBlock()
+    {
         // Depositing Movement
         if (zone == 1) {
             robot.slider.setTargetPosition(PositionFields.LOW);
@@ -144,29 +146,8 @@ public class AutoRedLeft extends LinearOpMode {
             delay(2);
         }
         robot.bucket.setPosition(1);
-        delay(2);
-        robot.reset();
-
-        // Parking movement
-        drive(2);
-        delay(0.5);
-        turn(85);
-        delay(0.5);
-        drive(57.5);
     }
 
-    // Functions for the different zones
-    private void zone1() {
-        // TODO
-    }
-
-    private void zone2() {
-        // TODO
-    }
-
-    private void zone3() {
-        // TODO
-    }
 
     public void delay(double t) { // Imitates the Arduino delay function
         runtime.reset();
@@ -180,7 +161,7 @@ public class AutoRedLeft extends LinearOpMode {
     }
 
     public void turn(double angle) {
-        robot.turn(angle, 1.5);
+        robot.pointTurnDegrees(1, angle, 1.5);
     }
 
     public void turn(double angle, double timeouts) {
