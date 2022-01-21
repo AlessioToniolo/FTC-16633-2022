@@ -251,10 +251,11 @@ public class BaseRobot {
     }
 
     public void reset() {
+        bucket.setPosition(PositionFields.BUCKET_INTAKE);
+
         slider.setTargetPosition(0);
         slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slider.setPower(1);
-        bucket.setPosition(PositionFields.BUCKET_INTAKE);
+        slider.setPower(.9);
         capstoneArm.setPosition(PositionFields.CAPSTONE_REST);
     }
 

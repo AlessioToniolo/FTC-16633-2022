@@ -489,11 +489,7 @@ public class Teleop extends OpMode {
 
                 if (bucketState == 0)//sets to positions this is intake
                 {
-                    robot.slider.setTargetPosition(0);
-                    robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    robot.slider.setPower(1);
-                    robot.bucket.setPosition(.08);
-                    robot.capstoneArm.setPosition(capstonerest);
+                   robot.reset();
                     capstoneState = 0;
                     bucketState = 0;
                     sliderstate = 0;
@@ -561,11 +557,7 @@ public class Teleop extends OpMode {
             preValueLBumper2 = player2.left_bumper;
             //left bumper sets bucket and slider to intake position
             if ((player1.y && player1.y != preValueY) || (player2.y && player2.y != preValueY2)) {
-                robot.bucket.setPosition(bucketintake);
-                robot.slider.setTargetPosition(0);
-                robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.slider.setPower(.9);
-                robot.capstoneArm.setPosition(capstonerest);
+                robot.reset();
                 capstoneState = 0;
                 bucketState = 0;
                 sliderstate = 0;
