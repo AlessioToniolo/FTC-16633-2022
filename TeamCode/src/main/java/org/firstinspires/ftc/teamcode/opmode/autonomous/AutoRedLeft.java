@@ -104,25 +104,30 @@ public class AutoRedLeft extends LinearOpMode {
     // Main Function that runs before the zone functions
     private void movement() {
         robot.reset();
-
+        telemetry.addLine(String.valueOf(PositionFields.turnMod));
         // Movement before the hub
         drive(8);//move forrward right before the barcode
         delay(0.5);
         turn(-90);
         delay(0.5);
-        drive(15);//turn and move to before the wall
+        drive(16.4);//turn and move to before the wall
         delay(0.5);
         turn(90);
         delay(0.5);
-        drive(26);//turn and move past barcode
+        drive(23, .5);//turn and move past barcode
         delay(0.5);
         turn(-90);
-        drive(-24);//turn and move to carousel
+        delay(0.5);
+        drive(-21, .7);//turn and move to carousel
         depositBlock();
-        delay(.5);
-        drive(24);
+        delay(2);
+        drive(27);
         robot.reset();
         //add parking and carousel
+        turn(-95);
+        delay(0.5);
+        drive(8);
+
     }
 
     // Functions for the different zones
@@ -145,7 +150,7 @@ public class AutoRedLeft extends LinearOpMode {
             robot.slider.setPower(1);
             delay(2);
         }
-        robot.bucket.setPosition(1);
+        robot.bucket.setPosition(PositionFields.OUTTAKE);
     }
 
 
@@ -159,12 +164,15 @@ public class AutoRedLeft extends LinearOpMode {
     public void drive(double distance) {
         robot.drive(distance, 1, 5);
     }
-
+    public void drive(double distance, double speed){
+        robot.drive(distance, speed, 5);
+    }
     public void turn(double angle) {
-        robot.pointTurnDegrees(1, angle, 1.5);
+
+        robot.pointTurnDegrees(.6, angle , 1.5);
+        telemetry.addLine(String.valueOf(robot.getOrientation()));
+        telemetry.update();
     }
 
-    public void turn(double angle, double timeouts) {
-        robot.turn(angle, timeouts);
-    }
+
 }

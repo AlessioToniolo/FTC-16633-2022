@@ -257,7 +257,7 @@ public class BaseRobot {
 
         slider.setTargetPosition(0);
         slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slider.setPower(.9);
+        slider.setPower(.7);
         capstoneArm.setPosition(PositionFields.CAPSTONE_REST);
     }
 
@@ -495,8 +495,8 @@ public class BaseRobot {
         rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Set to Limit of PositionFields.DRIVE_SPEED
-        if (Math.abs(speed) > PositionFields.DRIVE_SPEED) {
-            speed = PositionFields.DRIVE_SPEED; //
+        if (Math.abs(speed) > PositionFields.DRIVE_SPEED_MODIFIER) {
+            speed = PositionFields.DRIVE_SPEED_MODIFIER; //
         }
 
         // Ensure that the opmode is still active
@@ -566,6 +566,7 @@ public class BaseRobot {
         int newRightRearTarget;
 
         // Reverse inches
+
         deg = deg * -1 * PositionFields.turnMod;
 
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -579,8 +580,8 @@ public class BaseRobot {
         rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Set to Limit of PositionFields.DRIVE_SPEED
-        if (Math.abs(speed) > PositionFields.DRIVE_SPEED) {
-            speed = PositionFields.DRIVE_SPEED; //
+        if (Math.abs(speed) > PositionFields.DRIVE_SPEED_MODIFIER) {
+            speed = PositionFields.DRIVE_SPEED_MODIFIER; //
         }
 
         // Ensure that the opmode is still active

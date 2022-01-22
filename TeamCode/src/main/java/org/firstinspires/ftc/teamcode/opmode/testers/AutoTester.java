@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode.autonomous;
+package org.firstinspires.ftc.teamcode.opmode.testers;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -19,7 +19,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Config
 @Autonomous
-public class AutoBlueRight extends LinearOpMode {
+public class AutoTester extends LinearOpMode {
     // Instance of Robot Class
     BaseRobot robot = new BaseRobot();
 
@@ -105,28 +105,9 @@ public class AutoBlueRight extends LinearOpMode {
     private void movement() {
         robot.reset();
         telemetry.addLine(String.valueOf(PositionFields.turnMod));
-        // Movement before the hub
-        drive(8);//move forrward right before the barcode
-        delay(0.5);
-        turn(90);
-        delay(0.5);
-        drive(14);//turn and move to before the wall
-        delay(0.5);
-        turn(-90);
-        delay(0.5);
-        drive(23);//turn and move past barcode
-        delay(0.5);
-        turn(90);
-        delay(0.5);
-        drive(-21, .7);//turn and move to carousel
-        depositBlock();
-        delay(2);
-        drive(27);
-        robot.reset();
-        //add parking and carousel
-       turn(95);
-        delay(0.5);
-        drive(11.6);
+       turn(90);
+       delay(1);
+       turn(90);
 
     }
 
@@ -164,9 +145,7 @@ public class AutoBlueRight extends LinearOpMode {
     public void drive(double distance) {
         robot.drive(distance, 1, 5);
     }
-    public void drive(double distance, double speed){
-        robot.drive(distance, speed, 5);
-    }
+
     public void turn(double angle) {
 
         robot.pointTurnDegrees(.6, angle , 1.5);

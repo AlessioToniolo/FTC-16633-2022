@@ -143,12 +143,12 @@ public class Teleop extends OpMode {
         robot.rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
         // Reset the value of the encoder of the linear slider
         robot.slider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.slider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         target = robot.slider.getCurrentPosition();
         servotarget = capstonerest;
+
 
         // Reset the position of the servo for intaking
         /*robot.slider.setTargetPosition(0);
@@ -227,7 +227,7 @@ public class Teleop extends OpMode {
             }
             // Adjusting the input by the speed cap
             forward = player1.left_stick_y * speed;
-            turn = player1.right_stick_x * speed;
+            turn = player1.right_stick_x * speed * PositionFields.TURN_SPEED_MODIFIER;
 
             // Kinematics
             total1 = forward - turn;
@@ -414,14 +414,19 @@ public class Teleop extends OpMode {
                 robot.capstoneArm.setPosition(servotarget);
             }
             if (curgamepad2.a && curgamepad2.a != preValueA2) {
+                speed = .25;
                 if(capstoneState == 0) {
                     target = sliderCapstoneIntake;
+                    robot.intakeBar.setPosition(PositionFields.BUCKET_OVER);
                     robot.slider.setTargetPosition(target);
                     robot.capstoneArm.setPosition(capstoneintake);
                     capstoneState = 1;
+                    intakeBar = 0;
                     servotarget = capstoneintake;
                     robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     robot.slider.setPower(1);
+
+
                 }
                 else if(capstoneState == 1)
                 {
@@ -442,6 +447,7 @@ public class Teleop extends OpMode {
                     servotarget = capstonerest;
                     robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     robot.slider.setPower(1);
+                    //speed = 1;
                 }
                 
             }

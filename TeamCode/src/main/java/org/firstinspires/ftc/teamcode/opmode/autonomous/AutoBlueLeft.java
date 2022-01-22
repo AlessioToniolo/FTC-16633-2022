@@ -104,11 +104,11 @@ public class AutoBlueLeft extends LinearOpMode {
     // Main Function that runs before the zone functions
     private void movement() {
         // Movement before the hub
-        drive(10);
+        drive(9);
         delay(0.5);
         turn(90);
         delay(0.5);
-        drive(13);
+        drive(15);
         delay(0.5);
         turn(90);
         delay(0.5);
@@ -121,7 +121,7 @@ public class AutoBlueLeft extends LinearOpMode {
         // Parking movement
         drive(8);
         delay(0.5);
-        turn(-90);
+        turn(90);
         delay(0.5);
         drive(57.5);
     }
@@ -160,10 +160,9 @@ public class AutoBlueLeft extends LinearOpMode {
     }
 
     public void turn(double angle) {
-        robot.turn(angle, 1.5);
-    }
 
-    public void turn(double angle, double timeouts) {
-        robot.turn(angle, timeouts);
+        robot.pointTurnDegrees(.6, angle , 1.5);
+        telemetry.addLine(String.valueOf(robot.getOrientation()));
+        telemetry.update();
     }
 }

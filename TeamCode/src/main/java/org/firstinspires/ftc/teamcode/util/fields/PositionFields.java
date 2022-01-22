@@ -8,16 +8,17 @@ public class PositionFields {
     public static int LOW = 200;
     public static int MIDDLE = 750;
     public static int TOP = 2000;
-    public static int sliderCapstoneIntake = 600;
+    public static int sliderCapstoneIntake = 700;
 
     // Intake Bar Positions
     public static double BUCKET_OVER = .35;
     public static double BUCKET_NOT_OVER = .4;
 
     // Bucket Positions
-    public static double BUCKET_INTAKE = .08;
-    public static double HOLDING = .35;
+    public static double BUCKET_INTAKE = 0;
+    public static double HOLDING = .32;
     public static double OUTTAKE = 1;
+
 
     // Capstone Positions
     public static double CAPSTONE_REST = .9;
@@ -34,16 +35,16 @@ public class PositionFields {
     public static double INTAKE_OUT = 1;
 
     // Modify the turning
-    public static double TURN_MOD = 4.25;
+    //public static double TURN_MOD = 4.25;
 
     // For Encoder Functions
     public static double COUNTS_PER_MOTOR_REV = 537.6;
     public static double MOTOR_RPM = 312;
-    public static double turnMod = 4;
+    public static double turnMod = 3.79;
     public static double DRIVE_GEAR_REDUCTION = 1.0; // This is < 1.0 if geared UP
     public static double WHEEL_DIAMETER_INCHES = 4; // For figuring out circumference
     public static double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
     public static double COUNTS_PER_DEGREE = COUNTS_PER_MOTOR_REV / 360;
-    public static double DRIVE_SPEED = 1.0;
-    public static double TURN_SPEED = 1.0;
+    public static double DRIVE_SPEED_MODIFIER = 1.0;
+    public static double TURN_SPEED_MODIFIER = .8;
 }
