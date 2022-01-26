@@ -110,15 +110,17 @@ public class AutoRedLeft extends LinearOpMode {
         delay(0.5);
         turn(-90);
         delay(0.5);
-        drive(16.4);//turn and move to before the wall
+        drive(17.5);//turn and move to before the wall
         delay(0.5);
         turn(90);
         delay(0.5);
-        drive(23, .5);//turn and move past barcode
+        drive(27, .5);//turn and move past barcode
         delay(0.5);
         turn(-90);
+        delay(.5);
+        drive(5, .5);
         delay(0.5);
-        drive(-21, .7);//turn and move to carousel
+        drive(-27, .7);//turn and move to carousel
         depositBlock();
         delay(2);
         drive(27);
@@ -126,13 +128,15 @@ public class AutoRedLeft extends LinearOpMode {
         //add parking and carousel
         turn(-95);
         delay(0.5);
-        drive(8);
+        drive(10);
 
     }
 
     // Functions for the different zones
     private void depositBlock()
     {
+        robot.bucket.setPosition(PositionFields.HOLDING);
+        delay(1);
         // Depositing Movement
         if (zone == 1) {
             robot.slider.setTargetPosition(PositionFields.LOW);
@@ -170,8 +174,7 @@ public class AutoRedLeft extends LinearOpMode {
     public void turn(double angle) {
 
         robot.pointTurnDegrees(.6, angle , 1.5);
-        telemetry.addLine(String.valueOf(robot.getOrientation()));
-        telemetry.update();
+
     }
 
 

@@ -13,4 +13,6 @@ public class PIDFields {
     // PID (and possibly f soon) Coefficients for Autonomous Forward and Backward Movement using Encoder Readings
     // TODO: tune
     public static PIDCoefficients MOVE_PID = new PIDCoefficients(0.1, 0.1, 0.1);
+    public static double imuModifier = .7;
+    public static double marginOfError = 0;
 }

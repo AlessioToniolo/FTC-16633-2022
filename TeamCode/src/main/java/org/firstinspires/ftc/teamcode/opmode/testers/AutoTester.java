@@ -21,7 +21,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 @Autonomous
 public class AutoTester extends LinearOpMode {
     // Instance of Robot Class
-    BaseRobot robot = new BaseRobot();
+    BaseRobot robot = new BaseRobot(telemetry);
 
     // todo TESTING DISTANCE
     public static double distanceToMove = 1;
@@ -104,10 +104,18 @@ public class AutoTester extends LinearOpMode {
     // Main Function that runs before the zone functions
     private void movement() {
         robot.reset();
-        telemetry.addLine(String.valueOf(PositionFields.turnMod));
        turn(90);
-       delay(1);
+      delay(1);
        turn(90);
+        delay(1);
+        turn(90);
+        delay(1);
+        turn(90);
+        delay(1);
+        turn(-90);
+        delay(1);
+        turn(-90);
+
 
     }
 
@@ -148,9 +156,8 @@ public class AutoTester extends LinearOpMode {
 
     public void turn(double angle) {
 
-        robot.pointTurnDegrees(.6, angle , 1.5);
-        telemetry.addLine(String.valueOf(robot.getOrientation()));
-        telemetry.update();
+        robot.imuturn(angle, 1.5);
+
     }
 
 

@@ -42,7 +42,7 @@ public class Teleop extends OpMode {
     final double capstoneintake = PositionFields.CAPSTONE_INTAKE;//unknown
     final double capstonecapping = PositionFields.CAPSTONE_CAPPING;// .27 doublethink is what they want you to think (run or the party will find you)
     // Use the class created to define  Robot's hardware
-    BaseRobot robot = new BaseRobot();
+    BaseRobot robot = new BaseRobot(telemetry);
     final double stop = PositionFields.STOP;//time for how long carousel should be stopped for
     final double go = PositionFields.GO; // time for how long carousel should be stopped for
     //dual control variable
@@ -650,6 +650,11 @@ public class Teleop extends OpMode {
                 telemetry.addLine("Game Portion: " + gameModeTitle);
                 telemetry.addLine("PracticeMode:  " + practicemode);
                 telemetry.addLine("DualControlsActive:  " + dualcontrols);
+                telemetry.addLine("Orientation" + robot.getCurrentOrientation());
+                telemetry.addLine("heading" + robot.getIntegratedHeading());
+//                double goal = robot.getImuTarget(90.0, robot.getCurrentOrientation());
+//                double currentError = robot.getCurrentError(90, goal, robot.getCurrentOrientation());
+//                robot.getImuPower(currentError, 0, robot.getCurrentOrientation(), goal);
             } else {
                 telemetry.addLine("Time" + runtime.seconds());
                 telemetry.addLine("Game Portion:" + gamemode + " " + gameModeTitle);

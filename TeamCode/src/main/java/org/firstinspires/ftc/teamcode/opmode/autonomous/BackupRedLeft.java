@@ -18,12 +18,13 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Config
 @Autonomous
-public class AutoRedRight extends LinearOpMode {
+public class BackupRedLeft extends LinearOpMode {
     // Instance of Robot Class
     BaseRobot robot = new BaseRobot();
 
     // todo TESTING DISTANCE
     public static double distanceToMove = 1;
+    public static double delayTime = 10;
 
     // Delay ElapsedTime
     private final ElapsedTime runtime = new ElapsedTime();
@@ -103,28 +104,11 @@ public class AutoRedRight extends LinearOpMode {
 
     // Main Function that runs before the zone functions
     private void movement() {
-        // Movement before the hub
-        delay(0);
-        drive(9);
-        delay(0.5);
-        turn(-90);
-        delay(0.5);
-        drive(15);
-        delay(0.5);
-        turn(-90);
-        delay(0.5);
-        drive(-7);
-
-        depositBlock();
-        delay(2);
-        robot.reset();
-
-        // Parking movement
-        drive(8);
-        delay(0.5);
-        turn(-90);
-        delay(0.5);
-        drive(57.5);
+        robot.slider.setTargetPosition(PositionFields.MIDDLE);
+        robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.slider.setPower(1);
+        robot.bucket.setPosition(PositionFields.OUTTAKE);
+        delay(7);
     }
 
     private void depositBlock()

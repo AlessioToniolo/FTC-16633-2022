@@ -114,11 +114,13 @@ public class AutoBlueRight extends LinearOpMode {
         delay(0.5);
         turn(-90);
         delay(0.5);
-        drive(23);//turn and move past barcode
+        drive(23.4);//turn and move past barcode
         delay(0.5);
         turn(90);
+        delay(.5);
+        drive(13, .5);
         delay(0.5);
-        drive(-21, .7);//turn and move to carousel
+        drive(-28, .7);//turn and move to carousel
         depositBlock();
         delay(2);
         drive(27);
@@ -170,8 +172,7 @@ public class AutoBlueRight extends LinearOpMode {
     public void turn(double angle) {
 
         robot.pointTurnDegrees(.6, angle , 1.5);
-        telemetry.addLine(String.valueOf(robot.getOrientation()));
-        telemetry.update();
+
     }
 
 

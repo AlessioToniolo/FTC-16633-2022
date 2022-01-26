@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -28,7 +29,7 @@ public class BaseRobot {
     public Servo bucket;
     public Servo intakeBar;
     public Servo capstoneArm;
-
+    Telemetry telemetry;
     // Local OpMode members
     HardwareMap hwMap;
 
@@ -43,7 +44,13 @@ public class BaseRobot {
 
     // Constructor - leave this blank
     public BaseRobot() {
+        telemetry = null;
     }
+    public BaseRobot(Telemetry telemetry)
+    {
+        this.telemetry = telemetry;
+    }
+
 
     // Initialize Standard Hardware Interfaces
     public void init(HardwareMap ahwMap, boolean RUN_USING_ENCODERS) {
@@ -383,8 +390,8 @@ public class BaseRobot {
 
     // Turn Using the IMU and PID
     public void turn(double deg, double timeoutS) {
-        if(deg + currentOrientation >= 360) currentOrientation = (deg + currentOrientation) -360;
-        else currentOrientation += deg;
+//        if(deg + currentOrientation >= 360) currentOrientation = (deg + currentOrientation) -360;
+//        else currentOrientation += deg;
         // p stands for proportional
         double p;
         // d stands for derivative and gets the current rate of change
@@ -397,17 +404,18 @@ public class BaseRobot {
         // time for loop
         ElapsedTime imuTime;
 
-        // Get the first heading
-        double offset = getIntegratedHeading();
+        // Get our current heading
+        double offset = getCurrentOrientation();
         // Adapt target to curr heading
         double imuTarget = deg + offset;
 
         // While
         if (deg > 0) {
             imuTime = new ElapsedTime();
-            while (imuTime.seconds() < timeoutS) {
+            while (imuTime.seconds() < timeoutS || currentError <= 0) {
                 // Compute the current error
-                currentError = imuTarget + getIntegratedHeading();
+                currentError = imuTarget - getCurrentOrientation();// if we want to turn to 20 and we are at 5 the error is 15
+
 
                 // Compute
                 p = PIDFields.IMU_TURN_PID.p * currentError;
@@ -427,9 +435,9 @@ public class BaseRobot {
             imuTime = null;
         } else {
             imuTime = new ElapsedTime();
-            while (imuTime.seconds() < timeoutS) {
+            while (imuTime.seconds() < timeoutS || currentError >= 0) {
                 // Compute the current error
-                currentError = imuTarget - getIntegratedHeading();
+                currentError = imuTarget - getCurrentOrientation(); // I want to turn -90 target is -90; current error starts at -90 we turn a bit and then our position becomes -something
 
                 // Compute
                 p = PIDFields.IMU_TURN_PID.p * currentError;
@@ -455,9 +463,121 @@ public class BaseRobot {
         leftRear.setPower(0);
         rightRear.setPower(0);
     }
+    public void imuturn(double deg, double timeoutS) {
+//        if(deg + currentOrientation >= 360) currentOrientation = (deg + currentOrientation) -360;
+//        else currentOrientation += deg;
+        // p stands for proportional
+        double p;
+        // d stands for derivative and gets the current rate of change
+        double d;
+        // power adds p and d;
+        double power;
+        double currentError = 0;//represents how much we have left to turn; is alsways positive
+        double previousError = 0;
 
+        // time for loop
+        ElapsedTime imuTime;
+
+        // Get our current heading
+        double offset = getCurrentOrientation();
+        // Adapt target to curr heading
+        double imuTarget = getImuTarget(deg, offset);
+
+        // While
+            imuTime = new ElapsedTime();
+            while (imuTime.seconds() < timeoutS|| currentError > 1) {
+                currentError = getCurrentError(deg, imuTarget, getCurrentOrientation());
+                power = getImuPower(currentError, previousError, getCurrentOrientation(), imuTarget);
+                leftFront.setPower(-power);
+                rightFront.setPower(power);
+                leftRear.setPower(-power);
+                rightRear.setPower(power);
+                previousError = currentError;
+            }
+
+        // Turn off motors once done
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftRear.setPower(0);
+        rightRear.setPower(0);
+    }
+    public double getImuPower(double currentError, double previousError, double orientation, double goal)
+    {
+        int leftOrRight = 0;
+        if(distanceFromTurningLeft(orientation, goal) < distanceFormTurningRight(orientation, goal)) {
+            leftOrRight = -1; //we want to turn left
+        }
+        else if(distanceFormTurningRight(orientation, goal) <= distanceFromTurningLeft(orientation, goal)){leftOrRight = 1;}
+       double p = PIDFields.IMU_TURN_PID.p * currentError;
+        double d = PIDFields.IMU_TURN_PID.d * (currentError - previousError);
+        double power = p + d;
+         power *= PIDFields.imuModifier * leftOrRight;
+        telemetry.addLine("currentError: " + currentError);
+        telemetry.addLine("previous Error: " + previousError);
+        telemetry.addLine("Orientation: " + orientation);
+        telemetry.addLine("goal:" + goal);
+        telemetry.addLine("leftOrRight: " + leftOrRight);
+        telemetry.addLine("Distance from right: " + distanceFormTurningRight(orientation, goal));
+        telemetry.addLine("Distance from left:" + distanceFromTurningLeft(orientation, goal));
+        telemetry.update();
+        //delay(5);
+        //delay();
+         return power;
+    }
+    public double getImuTarget(double deg, double currentOrientation){
+        double imutarget = 0;
+        if(deg + currentOrientation >= 360)
+        {
+            imutarget = (deg + currentOrientation) - 360;
+        }
+        else if(deg + currentOrientation  < 0)
+        {
+            imutarget = (360 +deg) + currentOrientation;
+        }
+        else imutarget = deg + currentOrientation;
+        return imutarget;
+    }
+    public double distanceFormTurningRight(double orientation, double goal) {
+        double output;
+        if(orientation >= goal)
+        {
+            output = (360 - orientation) + goal;
+        }
+        else output = goal - orientation;
+
+        return output;
+    }
+    public double distanceFromTurningLeft(double orientation, double goal) {
+        double output;
+        if(goal >= orientation){
+            output = (360 - goal) + orientation;
+        }
+        else output =  orientation - goal;
+        return output;
+    }
+    public double getCurrentError(double deg, double imuTarget, double currentOrientation) {
+        double error = 0;
+        if(deg > 0)// if we are turning right
+        {
+
+           error = distanceFormTurningRight(currentOrientation, imuTarget);
+        }
+        else if(deg < 0)// if we are turning left
+        {
+            error =  distanceFromTurningLeft(currentOrientation, imuTarget);
+        }
+        return error;
+    }
+
+public double getCurrentOrientation()
+{
+   double orientation = -1 * imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+   telemetry.addLine("imuorientation" +orientation);
+   if(orientation < 0) orientation = 360 - (-1* orientation );
+   return orientation;
+}
     // Get Current IMU Heading that is adapted to a Cumulative Scale
-    private double getIntegratedHeading() {
+    public double getIntegratedHeading() {
         double currentHeading = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
         double deltaHeading = currentHeading - previousHeading;
 
@@ -564,7 +684,7 @@ public class BaseRobot {
         int newRightFrontTarget;
         int newLeftRearTarget;
         int newRightRearTarget;
-
+speed = .6;
         // Reverse inches
 
         deg = deg * -1 * PositionFields.turnMod;
@@ -640,9 +760,16 @@ public class BaseRobot {
         }
 
     }
-    public double getOrientation() {
-        return currentOrientation;
+    public void delay(double delay)
+    {
+        ElapsedTime timer = new ElapsedTime();
+        while(timer.seconds() < delay)
+        {
+
+        }
     }
+
+
 }
 
 
