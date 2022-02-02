@@ -16,8 +16,8 @@ public class PositionFields {
 
     // Bucket Positions
     public static double BUCKET_INTAKE = 0;
-    public static double HOLDING = .32;
-    public static double OUTTAKE = 1;
+    public static double BUCKET_HOLDING = .32;
+    public static double BUCKET_OUTTAKE = 1;
 
 
     // Capstone Positions
@@ -27,6 +27,7 @@ public class PositionFields {
 
     // Speed Values
     public static double MAX_CAROUSEL_SPEED = .8;
+    public static double CAROUSEL_SPEED_AFTER = .5;
     public static double STOP = 1.5;
     public static double GO = 1.5;
 

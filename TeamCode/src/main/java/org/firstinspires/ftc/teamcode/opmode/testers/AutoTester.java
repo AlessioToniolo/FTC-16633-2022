@@ -105,12 +105,12 @@ public class AutoTester extends LinearOpMode {
     private void movement() {
         robot.reset();
        turn(90);
-      delay(1);
+        delay(1);
        turn(90);
         delay(1);
         turn(90);
         delay(1);
-        turn(90);
+        turn(-90);
         delay(1);
         turn(-90);
         delay(1);
@@ -139,7 +139,7 @@ public class AutoTester extends LinearOpMode {
             robot.slider.setPower(1);
             delay(2);
         }
-        robot.bucket.setPosition(PositionFields.OUTTAKE);
+        robot.bucket.setPosition(PositionFields.BUCKET_OUTTAKE);
     }
 
 

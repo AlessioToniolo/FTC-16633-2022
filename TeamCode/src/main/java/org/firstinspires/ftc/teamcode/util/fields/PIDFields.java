@@ -14,5 +14,8 @@ public class PIDFields {
     // TODO: tune
     public static PIDCoefficients MOVE_PID = new PIDCoefficients(0.1, 0.1, 0.1);
     public static double imuModifier = .7;
-    public static double marginOfError = 0;
+    public static double marginOfError = .5;
+    public static double rightImuTurnMod = .97;
+    public static double leftImuTurnMod = .97;
+
 }

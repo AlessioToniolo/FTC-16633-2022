@@ -129,6 +129,8 @@ public class AutoBlueLeft extends LinearOpMode {
 
     private void depositBlock()
     {
+        robot.bucket.setPosition(PositionFields.BUCKET_HOLDING);
+        delay(1);
         // Depositing Movement
         if (zone == 1) {
             robot.slider.setTargetPosition(PositionFields.LOW);
@@ -146,7 +148,7 @@ public class AutoBlueLeft extends LinearOpMode {
             robot.slider.setPower(1);
             delay(2);
         }
-        robot.bucket.setPosition(1);
+        robot.bucket.setPosition(PositionFields.BUCKET_OUTTAKE);
     }
 
     public void delay(double t) { // Imitates the Arduino delay function
@@ -159,10 +161,15 @@ public class AutoBlueLeft extends LinearOpMode {
     public void drive(double distance) {
         robot.drive(distance, 1, 5);
     }
+    public void drive(double distance, double speed) {
+        robot.drive(distance, speed, 5);
+    }
 
     public void turn(double angle) {
+        robot.pointTurnDegrees(1, angle, 1.5);
+    }
 
-        robot.pointTurnDegrees(.6, angle , 1.5);
-
+    public void turn(double angle, double timeouts) {
+        robot.imuturn(angle, timeouts);
     }
 }

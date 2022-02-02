@@ -472,11 +472,15 @@ public class BaseRobot {
         double d;
         // power adds p and d;
         double power;
-        double currentError = 0;//represents how much we have left to turn; is alsways positive
+        double imuTurnMod;
+        if(deg > 0) imuTurnMod = PIDFields.rightImuTurnMod;
+        else imuTurnMod = PIDFields.leftImuTurnMod;
+        deg*= imuTurnMod;
+        double currentError = Math.abs(deg);//represents how much we have left to turn; is alsways positive
         double previousError = 0;
-
         // time for loop
         ElapsedTime imuTime;
+
 
         // Get our current heading
         double offset = getCurrentOrientation();
@@ -485,7 +489,7 @@ public class BaseRobot {
 
         // While
             imuTime = new ElapsedTime();
-            while (imuTime.seconds() < timeoutS|| currentError > 1) {
+            while (imuTime.seconds() < timeoutS && currentError > 0 + PIDFields.marginOfError ) {
                 currentError = getCurrentError(deg, imuTarget, getCurrentOrientation());
                 power = getImuPower(currentError, previousError, getCurrentOrientation(), imuTarget);
                 leftFront.setPower(-power);
