@@ -241,8 +241,11 @@ public class Teleop extends OpMode {
         preValueX = player1.x;
         if(player1.left_stick_button || player2.left_stick_button)
         {
-            robot.carousel.setPower(1);
+            if(redCarouselActive) robot.carousel.setPower(-1);
+            if(blueCarouselActive) robot.carousel.setPower(1);
+
         }
+
         if (player2.b && player2.b != preValueB2 || (carouselTimer != null && carouselTimer.seconds() >= PositionFields.CAROUSEL_SPEED_AFTER && !blueCarouselActive)) {
             if (!redCarouselActive && !blueCarouselActive) {
                 robot.carousel.setPower(-1 * (maxCarouselSpeed + carouselmodifier));
