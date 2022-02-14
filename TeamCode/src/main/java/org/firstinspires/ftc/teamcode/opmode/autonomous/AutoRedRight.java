@@ -20,7 +20,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 @Autonomous
 public class AutoRedRight extends LinearOpMode {
     // Instance of Robot Class
-    BaseRobot robot = new BaseRobot();
+    BaseRobot robot = new BaseRobot(telemetry);
 
     // todo TESTING DISTANCE
     public static double distanceToMove = 1;
@@ -166,7 +166,7 @@ public class AutoRedRight extends LinearOpMode {
     }
 
     public void turn(double angle) {
-        robot.pointTurnDegrees(1, angle, 1.5);
+        robot.imuturn( angle, 3);
     }
 
     public void turn(double angle, double timeouts) {

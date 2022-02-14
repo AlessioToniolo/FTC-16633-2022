@@ -261,7 +261,7 @@ public class BaseRobot {
 
     public void reset() {
         bucket.setPosition(PositionFields.BUCKET_INTAKE);
-
+        intakeBar.setPosition(PositionFields.BUCKET_NOT_OVER);
         slider.setTargetPosition(0);
         slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slider.setPower(.7);

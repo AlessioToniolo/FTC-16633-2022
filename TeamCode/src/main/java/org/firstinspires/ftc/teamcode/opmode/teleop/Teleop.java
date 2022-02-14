@@ -99,7 +99,7 @@ public class Teleop extends OpMode {
 
     //CAROUSEL
     double carouselmodifier = 0;
-    double maxCarouselSpeed = 0;
+    double maxCarouselSpeed = .8;
     boolean redCarouselActive = false;
     boolean blueCarouselActive = false;
     ElapsedTime carouselTimer = null;
@@ -137,7 +137,7 @@ public class Teleop extends OpMode {
         robot.slider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.slider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         target = robot.slider.getCurrentPosition();
-        capstoneTarget = PositionFields.CAPSTONE_INTAKE;
+        capstoneTarget = PositionFields.CAPSTONE_REST;
 
 
         // Reset the position of the servo for intaking
@@ -146,7 +146,7 @@ public class Teleop extends OpMode {
         robot.slider.setPower(1);*/
         robot.bucket.setPosition(PositionFields.BUCKET_INTAKE);
         robot.intakeBar.setPosition(PositionFields.BUCKET_NOT_OVER);
-        robot.capstoneArm.setPosition(PositionFields.CAPSTONE_INTAKE);
+        robot.capstoneArm.setPosition(PositionFields.CAPSTONE_REST);
 
     }
 
@@ -181,6 +181,7 @@ public class Teleop extends OpMode {
                 bucket(PositionFields.BUCKET_HOLDING);
                 robot.intakeBar.setPosition(PositionFields.BUCKET_OVER);
             }
+
             else if(bucketState == 1)
             {
                 if(intakeBar == 1)
@@ -241,8 +242,18 @@ public class Teleop extends OpMode {
         preValueX = player1.x;
         if(player1.left_stick_button || player2.left_stick_button)
         {
-            robot.carousel.setPower(1);
+            if(redCarouselActive) {
+                robot.carousel.setPower(-1);
+                redCarouselActive = false;
+            }
+            else if(blueCarouselActive)
+            {
+                robot.carousel.setPower(1);
+                blueCarouselActive = false;
+            }
         }
+        else if(!redCarouselActive && !blueCarouselActive) robot.carousel.setPower(0);
+
         if (player2.b && player2.b != preValueB2 || (carouselTimer != null && carouselTimer.seconds() >= PositionFields.CAROUSEL_SPEED_AFTER && !blueCarouselActive)) {
             if (!redCarouselActive && !blueCarouselActive) {
                 robot.carousel.setPower(-1 * (maxCarouselSpeed + carouselmodifier));
@@ -374,12 +385,15 @@ public class Teleop extends OpMode {
             if (intakeBar == 0) {
                 if (sliderState == 0 || sliderState == 1 || sliderState == 2) {
                     sliderState = 3;
+                    telemetry.addLine("in");
                     target = PositionFields.TOP;
                 } else if (sliderState == 3) {
                     sliderState = 4;
                     target = 2500;
+                    capstoneTarget = PositionFields.CAPSTONE_CAPPING;
                 }
                 slider(target);
+                capstone(capstoneTarget);
             }
         }
         preValueDUp = player2.dpad_up;
@@ -440,6 +454,11 @@ public class Teleop extends OpMode {
             speed = 1;
         } else {
             speed = curspeed;
+        }
+        if(player1.right_stick_button)
+        {
+            curspeed = speed;
+            speed = .25;
         }
         // Adjusting the input by the speed cap
         forward = player1.left_stick_y * speed;
@@ -545,10 +564,14 @@ public class Teleop extends OpMode {
             else if (sliderState == 4) sliderStateStr = "Top Level";
             else sliderStateStr = "Capping Level";
             telemetry.addLine("Slider Position is " + robot.slider.getCurrentPosition() + " and target of the slider is" + target);
+            telemetry.addLine("Slider" + sliderStateStr);
             telemetry.addLine("");
+
 
             telemetry.addLine("/////Intake/////");
             telemetry.addLine("Intake: " + intake);
+            telemetry.addLine("IntakeBar: " + intakeBar);
+
             telemetry.addLine("");
 
             telemetry.addLine("/////Bucket/////");
@@ -571,8 +594,9 @@ public class Teleop extends OpMode {
 
             telemetry.addLine("/////Carousel/////");
             telemetry.addLine("CAROUSEL: " + carouselTel);
-            telemetry.addLine("Blue Carousel speed = ");
-            telemetry.addLine("Red Carousel speed = ");
+            telemetry.addLine("Blue Carousel Active = " + blueCarouselActive);
+            telemetry.addLine("Red Carousel Active = " + redCarouselActive);
+            telemetry.addLine(" Carousel speed = " + maxCarouselSpeed + carouselmodifier);
             telemetry.addLine("Carousel speed modifier = " + carouselmodifier);
             telemetry.addLine();
 
@@ -593,8 +617,7 @@ public class Teleop extends OpMode {
 
         } else {
             telemetry.addLine("Time" + runtime.seconds());
-            telemetry.addLine("Blue Carousel speed = ");
-            telemetry.addLine("Red Carousel speed = ");
+            telemetry.addLine("Carousel speed = " + maxCarouselSpeed + carouselmodifier);
             telemetry.addLine("Drive Speed:" + speed);
             telemetry.addLine("Game Portion:" + currentGameMode);
             telemetry.addLine("DualControls: " + dualControls);
@@ -613,6 +636,7 @@ public class Teleop extends OpMode {
         sliderState = 0;
         bucketState = 0;
         bucketTarget = PositionFields.BUCKET_INTAKE;
+        intakeBar = 0;
         target = 0;
         capstoneState = 0;
         capstoneTarget = PositionFields.CAPSTONE_REST;

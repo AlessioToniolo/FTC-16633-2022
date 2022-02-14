@@ -11,12 +11,12 @@ public class PositionFields {
     public static int sliderCapstoneIntake = 700;
 
     // Intake Bar Positions
-    public static double BUCKET_OVER = .35;
-    public static double BUCKET_NOT_OVER = .4;
+    public static double BUCKET_OVER = 0;
+    public static double BUCKET_NOT_OVER = .3;
 
     // Bucket Positions
     public static double BUCKET_INTAKE = 0;
-    public static double BUCKET_HOLDING = .32;
+    public static double BUCKET_HOLDING = .4;
     public static double BUCKET_OUTTAKE = 1;
 
 
@@ -27,7 +27,7 @@ public class PositionFields {
 
     // Speed Values
     public static double MAX_CAROUSEL_SPEED = .8;
-    public static double CAROUSEL_SPEED_AFTER = .5;
+    public static double CAROUSEL_SPEED_AFTER = 1;
     public static double STOP = 1.5;
     public static double GO = 1.5;
 
