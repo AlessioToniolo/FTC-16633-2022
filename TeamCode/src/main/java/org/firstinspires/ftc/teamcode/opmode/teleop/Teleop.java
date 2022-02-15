@@ -79,6 +79,8 @@ public class Teleop extends OpMode {
     //DRIVE VARIABLES
     double speed = 1; //tracks speed of the drive
     double curspeed = 1;//tracks the current speed of the motors and is used to remember the past speed when activating a speed boost
+    private boolean speedCap = false;//is ture when linear slider is extended
+
     //INTAKE VARIABLES
     double intake = 0; //if 0 intake is off, if 1 intake is on -1 is intake is in reverse
     //LINEAR SLIDER
@@ -436,6 +438,9 @@ public class Teleop extends OpMode {
         double turn;
         double total1;
         double total2;
+
+        if(robot.slider.getCurrentPosition() > 2300) speedCap = true;//speed cap enabled when capstone is up
+        else speedCap = false;
         // Toggle speed cap for motors
         if (player1.back && player1.back != preValueBack) {
             if (speed == 1) {
@@ -453,13 +458,15 @@ public class Teleop extends OpMode {
             }
             speed = 1;
         } else {
-            speed = curspeed;
+            if(!speedCap) {
+                speed = curspeed;
+            }
         }
-        if(player1.right_stick_button)
+       /* if(player1.right_stick_button)
         {
             curspeed = speed;
             speed = .25;
-        }
+        }*/
         // Adjusting the input by the speed cap
         forward = player1.left_stick_y * speed;
         turn = player1.right_stick_x * speed * PositionFields.TURN_SPEED_MODIFIER;
